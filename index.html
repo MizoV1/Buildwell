@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buildwell</title>
+
+  <!-- Shared styles first (owner: A), then one file per screen -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/fit.css">
+  <link rel="stylesheet" href="css/customize.css">
+  <link rel="stylesheet" href="css/review.css">
+  <link rel="stylesheet" href="css/checkout.css">
+  <link rel="stylesheet" href="css/orders.css">
+  <link rel="stylesheet" href="css/help.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">Skip to content</a>
+
+  <!-- Every screen is drawn inside #app by the router -->
+  <main id="app" tabindex="-1"></main>
+
+  <!-- Short feedback messages (Buildwell.ui.toast) -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!--
+    Script order matters. Plain <script> tags only (no modules, no fetch),
+    so the prototype works by double-clicking index.html.
+  -->
+  <!-- Core (owner: A) -->
+  <script src="js/state.js"></script>
+  <script src="js/price.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/router.js"></script>
+
+  <!-- Shared components (owner: A) -->
+  <script src="js/components/toast.js"></script>
+  <script src="js/components/toolbar.js"></script>
+  <script src="js/components/price-bar.js"></script>
+  <script src="js/components/voice-mock.js"></script>
+  <script src="js/components/placeholder.js"></script>
+
+  <!-- Screens (one file each) -->
+  <script src="js/screens/home.js"></script>
+  <script src="js/screens/style.js"></script>
+  <script src="js/screens/fit.js"></script>
+  <script src="js/screens/customize.js"></script>
+  <script src="js/screens/review.js"></script>
+  <script src="js/screens/checkout.js"></script>
+  <script src="js/screens/orders.js"></script>
+  <script src="js/screens/help.js"></script>
+
+  <!-- Demo panel and start-up (owner: A / D) -->
+  <script src="js/demo.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

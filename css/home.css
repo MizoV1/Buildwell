@@ -1,0 +1,40 @@
+/* css/home.css  |  Owner: A  |  Wireframe 1 */
+
+.home-top { display: flex; justify-content: flex-end; margin-bottom: var(--space-2); }
+.home-lang { display: flex; align-items: center; gap: 0.5rem; }
+
+.home-title { margin-top: var(--space-2); font-size: 2rem; text-align: center; }
+.home-subtitle { margin-bottom: var(--space-4); color: var(--text-muted); text-align: center; }
+
+.home-modes {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+.home-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 10rem;
+  padding: var(--space-3);
+  border: 3px solid var(--accent);
+  border-radius: 1rem;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.home-mode:hover { background: var(--accent-soft); }
+.home-mode-guided { background: var(--accent-soft); }
+.home-mode-name { font-size: 1.75rem; font-weight: 700; }
+.home-mode-desc { font-size: 1.125rem; color: var(--text-muted); }
+
+.home-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
