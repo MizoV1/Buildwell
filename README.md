@@ -239,4 +239,4 @@ Everything hangs off one global object, `Buildwell`. There are no modules or `fe
 2. Say what your part does and which requirements it covers.
 3. Do a live run of your part of Maria's path and show that it works.
 4. Walk through your code and explain what each part does.
-5. Send the .mp4 to Michael by **Thursday evening**.
+5. Send the .mp4 to Michael by **12pm Friday**.

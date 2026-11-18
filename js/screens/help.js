@@ -16,20 +16,51 @@
 
   B.screens.help = {
     render: function (container) {
+      //Toolbar: Has Back, Undo, and A+ for text size
       B.ui.toolbar(container);
 
-      // ---- Replace everything below with your real screen ----
-      B.ui.placeholder(container, {
-        title: 'Help and accessibility',
-        label: 'Information hierarchy: Help · Area A · UR6',
-        boxes: [
-          { title: 'Accessibility settings', items: ['Text size: 100%, 125%, 150%, 200%', 'Guided / Standard mode', 'No time limits; Undo and Back everywhere'] },
-          { title: 'Measuring your space', items: ['Short tape-measure steps'] },
-          { title: 'Materials', items: ['Oak, walnut, maple in plain language'] },
-          { title: 'Contact support', items: ['Demo phone and email'] }
-        ]
-      });
-    },
+      // 1. Defining a section for holding the screen.
+      // Defined the class as "help" so help.css can style it as .help
+      const section = document.createElement('section');
+      section.className = 'help';
+
+      // 2. Page Contents
+      section.innerHTML = 
+      //Title
+      '<h1>Help and accessibility</h1>' +
+
+      // Introdction under the title
+      '<p class = "help-intro"> Change how Buildwell looks, or find answers to common questions.</p>' +
+
+      // Defined into two-columns layout
+      // As the screen gets narrower it drops to single column (larger text sizes for example)
+      '<div class = "two-col">' +
+
+        // Card 1: text size and Guided / Standard buttons
+        '<div class = "card help-settings">' +
+          '<h2>Accessiblity settings</h2>' +
+        '</div>' +
+
+        // Card 2: Tape measuring steps
+        '<div class = "card help-measuring">' +
+          '<h2>Measuring your space</h2>' +
+        '</div>' +
+
+        // Card 3: Oak, Walnut, and Maple in plain words
+        '<div class ="card help-materials">' +
+          '<h2> Contact support</h2>' +
+        '</div>' +
+
+        // Card 4: Demo phone and email
+        '<div class="card help-contact">' +
+          '<h2>Contact support</h2>' +
+        '</div>' +
+      
+      '</div>';
+    
+    // 3. Adding the finished section to the page, below toolbar.
+    container.appendChild(section);
+    },    
 
     onEnter: function () {}
   };
