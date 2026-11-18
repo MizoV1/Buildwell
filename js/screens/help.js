@@ -27,7 +27,7 @@
       // 2. Page Contents
       section.innerHTML = 
       //Title
-      '<h1>Help and accessibility</h1>' +
+      '<h1>Help and Accessibility</h1>' +
 
       // Introdction under the title
       '<p class = "help-intro"> Change how Buildwell looks, or find answers to common questions.</p>' +
@@ -38,22 +38,22 @@
 
         // Card 1: text size and Guided / Standard buttons
         '<div class = "card help-settings">' +
-          '<h2>Accessiblity settings</h2>' +
+          '<h2>Accessiblity Settings</h2>' +
         '</div>' +
 
         // Card 2: Tape measuring steps
         '<div class = "card help-measuring">' +
-          '<h2>Measuring your space</h2>' +
+          '<h2>Measuring Your Space</h2>' +
         '</div>' +
 
         // Card 3: Oak, Walnut, and Maple in plain words
         '<div class ="card help-materials">' +
-          '<h2> Contact support</h2>' +
+          '<h2>Materials</h2>' +
         '</div>' +
 
         // Card 4: Demo phone and email
         '<div class="card help-contact">' +
-          '<h2>Contact support</h2>' +
+          '<h2>Contact Support</h2>' +
         '</div>' +
       
       '</div>';
