@@ -29,7 +29,7 @@ No branches or pull requests. Everyone works on `main`.
 | **Commit** | Makes a checkpoint you can go back to (still only on your computer) | Type a message in Source Control, click **Commit** | The file leaves the **Changes** list; the Sync button shows ↑1 |
 | **Sync** | Downloads others' work, then uploads yours to GitHub | Click **Sync Changes** | The number on the button disappears; your change shows on GitHub and the live link |
 
-Your teammates only see your work after **Sync**. Saving alone isn't enough.
+We can only see your work after **Sync**. Saving alone isn't enough.
 
 **Tip:** turn on **File → Auto Save** in VS Code so you never lose an edit.
 
