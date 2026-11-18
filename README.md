@@ -4,7 +4,7 @@ A clickable prototype of Buildwell, a made-to-order furniture system, following 
 
 > **To see the prototype:** open `index.html` in VS Code, then click **Go Live** at the **bottom-right** of VS Code. It opens in your browser and updates every time you save. Click the same button (now showing "Port: 5500") to stop it.
 
-- **Live link:** https://mizov1.github.io/Buildwell/ (updates a minute or two after each Sync)
+- **Live link:** https://github.com/MizoV1/Buildwell (updates a minute or two after each Sync)
 - **Demo panel:** press **D** (or open `index.html?demo`) to jump to any screen, change what the scan returns, create an order, advance its stage, or reset.
 
 To read everything better in the top right, swap from text editor to markdown editor.
