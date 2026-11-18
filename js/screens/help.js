@@ -44,16 +44,32 @@
         // Card 2: Tape measuring steps
         '<div class = "card help-measuring">' +
           '<h2>Measuring Your Space</h2>' +
-        '</div>' +
+          '<ol class = "help-steps">' +
+            '<li>Clear the wall where the desk will go.</li>' +
+            '<li>Measure from one side to the other at desk height.</li>' +
+            '<li>Leave a little room fo any sockets or skirting boards</li>' +
+            '<li>Enter the number on the fit check screen, in inches or cm.</li>' +
+          '</ol>' +
+        '</div>' 
 
         // Card 3: Oak, Walnut, and Maple in plain words
         '<div class ="card help-materials">' +
           '<h2>Materials</h2>' +
+          '<d1 class="help-woods">' +
+            '<dt>Oak</dt>' +
+            '<dd>Light brown and very hard-wearing.</dd>' +
+            '<dt>Walnut</dt>' +
+            '<dd>Dark brown with a rich look. Adds about a week to delivery.</dd>' +
+            '<dt>Maple</dt>' +
+            '<dd>Pale and smooth.</dd>' +
+          '</dl>' +
         '</div>' +
 
         // Card 4: Demo phone and email
         '<div class="card help-contact">' +
           '<h2>Contact Support</h2>' +
+          '<p>Phone: 1-800-234-5678 (demo)</p>' +
+          '<p>Email: support@buildwell.example (demo)</p>' +
         '</div>' +
       
       '</div>';
