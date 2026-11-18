@@ -50,12 +50,12 @@
             '<li>Leave a little room fo any sockets or skirting boards</li>' +
             '<li>Enter the number on the fit check screen, in inches or cm.</li>' +
           '</ol>' +
-        '</div>' 
+        '</div>' +
 
         // Card 3: Oak, Walnut, and Maple in plain words
         '<div class ="card help-materials">' +
           '<h2>Materials</h2>' +
-          '<d1 class="help-woods">' +
+          '<dl class="help-woods">' +
             '<dt>Oak</dt>' +
             '<dd>Light brown and very hard-wearing.</dd>' +
             '<dt>Walnut</dt>' +
