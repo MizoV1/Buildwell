@@ -13,7 +13,7 @@
 .help-woods dt::after { content: ":"; }   /* adds the colon after each name */
 .help-woods dd { margin: 0; }             /* removes the default indent */
 
-/* Settings card (used in Step 3) */
+/* Settings card */
 .help-label { margin: var(--space-2) 0 0.5rem; font-weight: 600; }
 .help-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .help-note { margin: var(--space-2) 0 0; color: var(--text-muted); font-size: 0.9375rem; }
