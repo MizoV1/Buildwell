@@ -7,7 +7,7 @@ A clickable prototype of Buildwell, a made-to-order furniture system, following 
 - **Live link:** https://mizov1.github.io/Buildwell/ (updates a minute or two after each Sync)
 - **Demo panel:** press **D** (or open `index.html?demo`) to jump to any screen, change what the scan returns, create an order, advance its stage, or reset.
 
-Haven't set up VS Code and Git yet? Use the setup guide Michael sent first.
+To read everything better in the top right, swap from text editor to markdown editor.
 
 ---
 
@@ -84,7 +84,7 @@ If you edit something and it never appears under **Changes**, check the tab titl
 - **A conflict** (a file shows both versions with Accept Current / Incoming / Both buttons): two people changed the same lines. Don't guess. Post in the chat.
 - **The page doesn't change after you save:** check the bottom-right of VS Code says "Port: 5500" (Live Server is running). If it says "Go Live", click it. Still old? Press `Ctrl+Shift+R` in the browser.
 - **The live link looks old:** wait two minutes and hard-refresh (`Ctrl+Shift+R`).
-- **Videos:** never put them in the repo (GitHub has a 100 MB limit). Send them through Google Drive.
+- **Videos:** never put them in the repo (GitHub has a 100 MB limit). Just email me them: michael.glenn@ace.tamut.edu, and if the file size is too large just lmk and we'll figure it out.
 
 ---
 
