@@ -1,3 +1,19 @@
 /* css/help.css  |  Owner: A  |  Help and accessibility
    Styles for this screen only. Start every class with "help-" (for example .help-panel).
    Use the colour variables and rem sizes from base.css. */
+
+   /* Materials: "Oak:" and its description on one line */
+.help-woods {
+  display: grid;
+  grid-template-columns: auto 1fr;   /* column 1 fits the wood name, column 2 takes the rest */
+  gap: 0.5rem 0.75rem;               /* space between rows, space between columns */
+  margin: 0;
+}
+.help-woods dt { font-weight: 700; }
+.help-woods dt::after { content: ":"; }   /* adds the colon after each name */
+.help-woods dd { margin: 0; }             /* removes the default indent */
+
+/* Settings card (used in Step 3) */
+.help-label { margin: var(--space-2) 0 0.5rem; font-weight: 600; }
+.help-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.help-note { margin: var(--space-2) 0 0; color: var(--text-muted); font-size: 0.9375rem; }
