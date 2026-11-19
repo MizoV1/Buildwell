@@ -47,8 +47,23 @@
       '<div class = "two-col">' +
 
         // Card 1: text size and Guided / Standard buttons
-        '<div class = "card help-settings">' +
-          '<h2>Accessiblity Settings</h2>' +
+        '<div class="card help-settings">' +
+          '<h2>Accessibility Settings</h2>' +
+
+          '<p class="help-label">Text size</p>' +
+          '<div class="help-options">' +
+            sizeButton(1) + sizeButton(1.25) + sizeButton(1.5) + sizeButton(2) +
+          '</div>' +
+
+          '<p class="help-label">Mode</p>' +
+          '<div class="help-options">' +
+            '<button type="button" class="btn btn-chip" data-mode="guided"' +
+              ' aria-pressed="' + (mode === 'guided') + '">Guided</button>' +
+            '<button type="button" class="btn btn-chip" data-mode="standard"' +
+              ' aria-pressed="' + (mode !== 'guided') + '">Standard</button>' +
+          '</div>' +
+
+          '<p class="help-note">Nothing in Buildwell has a time limit. Undo and Back are on every screen.</p>' +
         '</div>' +
 
         // Card 2: Tape measuring steps
