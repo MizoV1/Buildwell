@@ -228,7 +228,7 @@
         const ctm = svg.getScreenCTM();
         if (!ctm) return deskWidth;
         const svgX = pt.matrixTransform(ctm.inverse()).x;
-        const ratio = (svgX - svgDeskX) / 160;
+        const ratio = (svgX - (svgDeskX + 140)) / 160;
         return clampWidth(MIN_WIDTH + ratio * (MAX_WIDTH - MIN_WIDTH));
       }
 
