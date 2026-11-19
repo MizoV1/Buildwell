@@ -30,7 +30,7 @@
 
       // Builds a text sized button, like sizeButton(1.5) = 150% button
       function sizeButton(size) {
-        return '<button type="button" class="btn btn-chip" data-size =' + size +'"' +
+        return '<button type="button" class="btn btn-chip" data-size ="' + size +'"' +
         ' aria-pressed="' + (textSize === size) + '">' + (size * 100) + '%</button>';
       }
 
