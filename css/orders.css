@@ -1,3 +1,121 @@
 /* css/orders.css  |  Owner: D  |  Wireframe 6
    Styles for this screen only. Start every class with "orders-" (for example .orders-panel).
    Use the colour variables and rem sizes from base.css. */
+
+.orders-grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.orders-heading {
+  margin-top: 0;
+}
+
+.orders-timeline {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orders-timeline::before {
+  content: "";
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.375rem;
+  width: 0.1875rem;
+  background: var(--border);
+}
+
+.orders-step {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0;
+}
+
+.orders-marker {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.875rem;
+  height: 2.875rem;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.orders-step-done .orders-marker {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.orders-step-current .orders-marker {
+  border-color: var(--text);
+  background: var(--accent);
+  color: var(--on-accent);
+  outline: 3px solid var(--accent-soft);
+}
+
+.orders-step-label {
+  font-size: 1.125rem;
+}
+
+.orders-step-current .orders-step-label {
+  font-weight: 700;
+}
+
+.orders-here {
+  padding: 0.25rem 0.625rem;
+  border: 2px solid var(--warning);
+  border-radius: var(--radius);
+  background: var(--warning-soft);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.orders-summary,
+.orders-delivery {
+  font-size: 1.125rem;
+}
+
+.orders-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.orders-empty {
+  max-width: 36rem;
+}
+
+.orders-empty-text {
+  font-size: 1.125rem;
+}
+
+.orders-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 56rem) {
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+}
