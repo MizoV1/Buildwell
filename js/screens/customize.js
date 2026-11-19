@@ -248,7 +248,8 @@
         const updatedHandleX = svgDeskX + updatedSvgW;
         section.querySelector('.customize-desk-top').setAttribute('width', updatedSvgW);
         section.querySelector('.customize-desk-body').setAttribute('width', Math.max(40, updatedSvgW - 16));
-        section.querySelectorAll('rect')[3].setAttribute('x', svgDeskX + updatedSvgW - 28);
+        section.querySelector('.customize-leg-right').setAttribute('x', svgDeskX + updatedSvgW - 28);
+        section.querySelector('.customize-pull').setAttribute('x', svgDeskX + Math.round(updatedSvgW * 0.45));
         handleEl.setAttribute('cx', updatedHandleX);
         section.querySelector('.customize-handle-glyph').setAttribute('x', updatedHandleX);
         section.querySelector('#customize-width-label').textContent = 'Drag the circle to change width: ' + latestWidth + ' in';
