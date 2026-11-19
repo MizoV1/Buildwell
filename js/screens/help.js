@@ -76,7 +76,39 @@
     
     // 3. Adding the finished section to the page, below toolbar.
     container.appendChild(section);
-    },    
+
+    //4. Text size buttons: save size, apply everywhere, redraw, then confirm
+    section.querySelectorAll('[data-size]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        const size = Number(button.dataset.size);
+        B.state.set('textSize', size, { undo: false}); //classifies as a settings, making it capable of being undone.
+        B.ui.applyTextSize(); //resizes the whole app
+        B.router.refresh(); //redraw so the new button gets highlighted
+        const again = document.querySelector('.help [data-size="' + size + '"]');
+        if (again) again.focus();
+        B.ui.toast('Text size ' + (size * 100) + '%');
+      });
+    });
+
+    // 5. Guided/Standard buttons: same pattern
+      section.querySelectorAll('[data-mode]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          const newMode = button.dataset.mode;
+          B.state.set('mode', newMode, { undo: false });
+          B.ui.applyMode();                                  // shows or hides Guided hints everywhere
+          B.router.refresh();
+          const again = document.querySelector('.help [data-mode="' + newMode + '"]');
+          if (again) again.focus();
+          B.ui.toast(newMode === 'guided' ? 'Guided mode on' : 'Standard mode on');
+        });
+      });
+    
+    // 6. IF the toolbar's A+ button changes the size while here,
+    //    redraw so the highlighted button stays correct
+    B.state.onChange(function (key) {
+      if (key === 'textSize') B.router.refresh();
+    });
+  },    
 
     onEnter: function () {}
   };
