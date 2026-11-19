@@ -1,12 +1,12 @@
 // js/screens/help.js  |  Owner: A  |  Information hierarchy: Help  |  UR6
 //
 // WHAT TO BUILD
-//   [ ] Accessibility settings: text size buttons (100%, 125%, 150%, 200%) and Guided / Standard
+//   [x] Accessibility settings: text size buttons (100%, 125%, 150%, 200%) and Guided / Standard
 //       (use B.ui.applyTextSize() and B.ui.applyMode() after saving, like home.js does)
-//   [ ] Measuring your space: short steps for using a tape measure
-//   [ ] Materials: plain-language notes on oak, walnut and maple
-//   [ ] Contact support (demo phone and email)
-//   [ ] Line saying nothing has a time limit and Undo / Back are on every screen
+//   [x] Measuring your space: short steps for using a tape measure
+//   [x] Materials: plain-language notes on oak, walnut and maple
+//   [x] Contact support (demo phone and email)
+//   [x] Line saying nothing has a time limit and Undo / Back are on every screen
 //
 // READS FROM STATE:   textSize, mode
 // SAVES TO STATE:     textSize, mode (both with { undo: false })
@@ -39,7 +39,7 @@
       //Title
       '<h1>Help and Accessibility</h1>' +
 
-      // Introdction under the title
+      // Introduction under the title
       '<p class = "help-intro"> Change how Buildwell looks, or find answers to common questions.</p>' +
 
       // Defined into two-columns layout
@@ -72,7 +72,7 @@
           '<ol class = "help-steps">' +
             '<li>Clear the wall where the desk will go.</li>' +
             '<li>Measure from one side to the other at desk height.</li>' +
-            '<li>Leave a little room fo any sockets or skirting boards</li>' +
+            '<li>Leave a little room for any sockets or skirting boards</li>' +
             '<li>Enter the number on the fit check screen, in inches or cm.</li>' +
           '</ol>' +
         '</div>' +
@@ -106,7 +106,7 @@
     section.querySelectorAll('[data-size]').forEach(function (button) {
       button.addEventListener('click', function () {
         const size = Number(button.dataset.size);
-        B.state.set('textSize', size, { undo: false}); //classifies as a settings, making it capable of being undone.
+        B.state.set('textSize', size, { undo: false}); //classifies as a settings, so it is NOT undoable
         B.ui.applyTextSize(); //resizes the whole app
         B.router.refresh(); //redraw so the new button gets highlighted
         const again = document.querySelector('.help [data-size="' + size + '"]');
