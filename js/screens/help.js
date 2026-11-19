@@ -24,6 +24,16 @@
       const section = document.createElement('section');
       section.className = 'help';
 
+      // Current settings, right buttons show as selected
+      const textSize = B.state.get('textSize');
+      const mode = B.state.get('mode');
+
+      // Builds a text sized button, like sizeButton(1.5) = 150% button
+      function sizeButton(size) {
+        return '<button type="button" class="btn btn-chip" data-size =' + size +'"' +
+        ' aria-pressed="' + (textSize === size) + '">' + (size * 100) + '%</button>';
+      }
+
       // 2. Page Contents
       section.innerHTML = 
       //Title
