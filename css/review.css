@@ -1,3 +1,84 @@
 /* css/review.css  |  Owner: D  |  Wireframe 5
    Styles for this screen only. Start every class with "review-" (for example .review-panel).
    Use the colour variables and rem sizes from base.css. */
+
+.review-grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.review-heading {
+  margin-top: 0;
+}
+
+.review-list {
+  margin: 0;
+}
+
+.review-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.review-row:last-child {
+  border-bottom: none;
+}
+
+.review-row-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  align-items: baseline;
+}
+
+.review-row dt {
+  font-weight: 700;
+}
+
+.review-row dd {
+  margin: 0;
+}
+
+.review-fit-warning {
+  margin-top: var(--space-2);
+}
+
+.review-totals {
+  margin-top: var(--space-2);
+}
+
+.review-price {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.review-delivery {
+  font-size: 1.125rem;
+}
+
+.review-cancel-note {
+  margin-top: var(--space-2);
+  margin-bottom: 0;
+}
+
+.review-action-copy {
+  color: var(--text-muted);
+}
+
+.review-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@media (max-width: 56rem) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+}
