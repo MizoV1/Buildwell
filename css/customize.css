@@ -1,3 +1,178 @@
 /* css/customize.css  |  Owner: C  |  Wireframe 3
    Styles for this screen only. Start every class with "customize-" (for example .customize-panel).
    Use the colour variables and rem sizes from base.css. */
+
+.customize {
+  padding: var(--space-3, 1rem);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.customize-title {
+  margin-bottom: var(--space-2, 0.5rem);
+  font-size: 1.75rem;
+  color: var(--text);
+}
+
+.customize-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: var(--space-3, 1rem);
+  margin-top: var(--space-3, 1rem);
+}
+
+.customize-width-label {
+  font-weight: 600;
+  margin-bottom: var(--space-2, 0.5rem);
+  color: var(--text);
+}
+
+.customize-svg-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 0.5rem);
+  padding: var(--space-2, 0.5rem);
+}
+
+.customize-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.customize-drag-handle {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.customize-handle-glyph {
+  fill: var(--surface);
+  font-size: 0.9rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.customize-step-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 0.5rem);
+  margin-top: var(--space-3, 1rem);
+}
+
+.customize-fit-note {
+  margin-top: var(--space-3, 1rem);
+  padding: var(--space-2, 0.5rem) var(--space-3, 1rem);
+  border: 2px solid var(--warning);
+  border-radius: var(--radius, 0.5rem);
+  background: var(--warning-soft);
+  color: var(--text);
+}
+
+.customize-fit-ok {
+  margin-top: var(--space-2, 0.5rem);
+  color: var(--text-muted);
+}
+
+.customize-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 1rem);
+}
+
+.customize-heading {
+  font-size: 1.15rem;
+  margin-bottom: var(--space-2, 0.5rem);
+  color: var(--text);
+}
+
+.customize-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 0.5rem);
+}
+
+.customize-choice-btn[aria-pressed="true"] {
+  outline: 2px solid var(--accent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+
+.customize-finish-desc {
+  margin-top: var(--space-2, 0.5rem);
+  color: var(--text-muted);
+}
+
+.customize-compare-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 0.5rem);
+  margin-top: var(--space-3, 1rem);
+}
+
+.customize-closeup,
+.customize-compare {
+  margin-top: var(--space-3, 1rem);
+  padding-top: var(--space-3, 1rem);
+  border-top: 1px solid var(--border);
+}
+
+.customize-closeup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 1rem);
+}
+
+.customize-swatch-box {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: var(--radius, 0.5rem);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.customize-swatch-oak {
+  background: var(--wood-oak);
+}
+
+.customize-swatch-walnut {
+  background: var(--wood-walnut);
+}
+
+.customize-swatch-maple {
+  background: var(--wood-maple);
+}
+
+.customize-compare-label {
+  display: block;
+  margin-bottom: var(--space-2, 0.5rem);
+  color: var(--text);
+}
+
+.customize-compare-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2, 0.5rem);
+}
+
+.customize-compare-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  padding: var(--space-2, 0.5rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 0.5rem);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 64rem) {
+  .customize-grid {
+    grid-template-columns: 1fr;
+  }
+}
