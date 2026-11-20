@@ -3,8 +3,9 @@
 // WHAT THIS SCREEN DOES
 //   Step 1 (Wireframe 2): a simulated camera scan "measures" the space. The user confirms
 //                          it, or types their own measurement in inches or centimetres.
-//   Step 2 (Wireframe 2): a size comparison of the new desk, the old desk and a person,
-//                          with the room's width limit.
+//   Step 2 (Wireframe 2): a to-scale front view of the new desk and old desk between the
+//                          walls of the space, with measuring arrows for the space's width
+//                          and the desk's height.
 //   Step 2, too wide (Wireframe 4): an orange warning with Make it fit, Keep anyway
 //                          (asks to confirm first) and Re-measure.
 //
@@ -23,9 +24,11 @@
   // Friendly names for the style chosen on the previous screen
   const STYLE_NAMES = { 'classic-oak': 'Classic Oak', 'modern-walnut': 'Modern Walnut', executive: 'Executive' };
 
-  // Drawing scale: every width in the size comparison uses the same units per inch
-  const SCALE = 5;
+  // Drawing scale: widths AND heights use the same units per inch, so everything is to scale
+  const SCALE = 4;
+  const DESK_HEIGHT = 30;      // a standard desk height
   const OLD_DESK_WIDTH = 40;   // the user's current desk, drawn as a dashed outline
+  const OLD_DESK_HEIGHT = 29;
 
   B.screens.fit = {
     render: function (container) {
@@ -166,52 +169,88 @@
       }
 
       // ===== 4. Size comparison drawing (used in Step 2) ======================
-      // Every width uses the same SCALE. The new desk is drawn the same way as on
-      // the Customize screen: a top, a body with a drawer pull, and two legs,
-      // in the chosen wood finish and handle colour.
+      // A front view where widths and heights use the same SCALE, so the desks and
+      // the space are true to size. Two measuring arrows show the width of the space
+      // (horizontal) and the height of the desk (vertical). The new desk is drawn the
+      // same way as on Customize, in the chosen wood and handle colour.
       function createScaleDrawing(room, desk) {
-        const startX = 175;
-        const roomEnd = startX + room * SCALE;
-        const deskW = desk * SCALE;
+        const S = SCALE;
+        const floorY = 300;                              // the floor everything stands on
+        const widest = Math.max(room, desk) * S;
+        const canvasWidth = Math.max(640, widest + 240);
+        const startX = Math.round((canvasWidth - widest) / 2) + 20;   // left wall (inner edge), centred
+        const roomEnd = startX + room * S;               // right wall (inner edge)
+        const wallTop = 70;
+
+        // New desk: 30 in tall, same proportions as the Customize desk
+        const deskW = desk * S;
         const deskEnd = startX + deskW;
-        const canvasWidth = Math.max(650, deskEnd + 55, roomEnd + 55);
+        const deskTop = floorY - DESK_HEIGHT * S;        // 120 units tall in total
+        const topH = 22, bodyH = 49;                     // top + body + legs = 120
+        const legTop = deskTop + topH + bodyH;
+        const legH = floorY - legTop;
+
         const tooWide = desk > room;
+        const warn = tooWide ? ' is-warning' : '';
+        const arrowWidth = tooWide ? 'url(#fit-arrow-warn)' : 'url(#fit-arrow)';
+        const heightX = startX - 40;                     // the vertical arrow sits left of the space
         const wood = ' style="fill: var(--wood-' + finish + ')"';
 
         return (
           '<div class="fit-scale-drawing">' +
-            '<svg viewBox="0 0 ' + canvasWidth + ' 250" role="img" ' +
-              'aria-label="Size comparison: a ' + desk + ' inch desk, a ' + room + ' inch space, ' +
-              'your ' + OLD_DESK_WIDTH + ' inch old desk, and a person">' +
+            '<svg viewBox="0 0 ' + canvasWidth + ' 360" role="img" ' +
+              'aria-label="Drawn to scale: a ' + desk + ' inch wide, ' + DESK_HEIGHT + ' inch tall desk ' +
+              'in a ' + room + ' inch wide space, with your ' + OLD_DESK_WIDTH + ' inch old desk outlined">' +
 
-              // Person silhouette (for a sense of size; not drawn to the same scale)
-              '<circle class="fit-svg-person" cx="78" cy="69" r="13"/>' +
-              '<path class="fit-svg-person-body" d="M78 84 L78 153 M78 100 L55 128 M78 100 L101 128 M78 153 L60 210 M78 153 L96 210"/>' +
-              '<text class="fit-svg-muted" x="78" y="235" text-anchor="middle">Person (not to scale)</text>' +
+              // Arrowheads used by the measuring lines (teal, or orange when too wide)
+              '<defs>' +
+                '<marker id="fit-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+                  '<path class="fit-svg-arrowhead" d="M0 0 L10 5 L0 10 z"/></marker>' +
+                '<marker id="fit-arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+                  '<path class="fit-svg-arrowhead is-warning" d="M0 0 L10 5 L0 10 z"/></marker>' +
+                '<marker id="fit-arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">' +
+                  '<path class="fit-svg-arrowhead is-muted" d="M0 0 L10 5 L0 10 z"/></marker>' +
+              '</defs>' +
 
-              // Old desk: dashed outline, 40 inches wide
-              '<rect class="fit-svg-old" x="' + startX + '" y="50" width="' + (OLD_DESK_WIDTH * SCALE) + '" height="26"/>' +
-              '<text class="fit-svg-muted" x="' + (startX + OLD_DESK_WIDTH * SCALE / 2) + '" y="43" text-anchor="middle">Old desk · ' + OLD_DESK_WIDTH + ' in</text>' +
+              // Floor line
+              '<line class="fit-svg-floor" x1="0" y1="' + floorY + '" x2="' + canvasWidth + '" y2="' + floorY + '"/>' +
 
-              // Room width limit: dashed line (orange when the desk is too wide)
-              '<line class="fit-svg-limit' + (tooWide ? ' is-warning' : '') + '" x1="' + roomEnd + '" y1="34" x2="' + roomEnd + '" y2="226"/>' +
-              '<text class="fit-svg-strong" x="' + roomEnd + '" y="24" text-anchor="middle">Room limit: ' + room + ' in</text>' +
+              // Walls on each side of the space
+              '<rect class="fit-svg-wall" x="' + (startX - 8) + '" y="' + wallTop + '" width="8" height="' + (floorY - wallTop) + '"/>' +
+              '<rect class="fit-svg-wall" x="' + roomEnd + '" y="' + wallTop + '" width="8" height="' + (floorY - wallTop) + '"/>' +
 
-              // New desk, drawn like the Customize desk: top, body, drawer pull, two legs
-              '<rect x="' + startX + '" y="100" width="' + deskW + '" height="22" rx="4"' + wood + '/>' +                          // top
-              '<rect x="' + (startX + 8) + '" y="122" width="' + Math.max(40, deskW - 16) + '" height="50" rx="3"' + wood + '/>' + // body
-              '<rect class="desk-pull-' + handles + '" x="' + (startX + Math.round(deskW * 0.45)) + '" y="142" width="22" height="6" rx="2"/>' + // drawer pull
-              '<rect x="' + (startX + 14) + '" y="172" width="14" height="50" rx="2"' + wood + '/>' +                              // left leg
-              '<rect x="' + (deskEnd - 28) + '" y="172" width="14" height="50" rx="2"' + wood + '/>' +                             // right leg
+              // Horizontal arrow: the width of the space, wall to wall
+              '<line class="fit-svg-dim' + warn + '" x1="' + (startX + 2) + '" y1="48" x2="' + (roomEnd - 2) + '" y2="48" ' +
+                'marker-start="' + arrowWidth + '" marker-end="' + arrowWidth + '"/>' +
+              '<line class="fit-svg-tick' + warn + '" x1="' + startX + '" y1="38" x2="' + startX + '" y2="' + wallTop + '"/>' +
+              '<line class="fit-svg-tick' + warn + '" x1="' + roomEnd + '" y1="38" x2="' + roomEnd + '" y2="' + wallTop + '"/>' +
+              '<text class="fit-svg-dim-text' + warn + '" x="' + ((startX + roomEnd) / 2) + '" y="32" text-anchor="middle">Your space: ' + room + ' in wide</text>' +
 
-              // The part of the desk past the limit (only when too wide)
+              // Vertical arrow: the height of the desk, floor to desktop
+              '<line class="fit-svg-dim is-muted" x1="' + heightX + '" y1="' + (deskTop + 2) + '" x2="' + heightX + '" y2="' + (floorY - 2) + '" ' +
+                'marker-start="url(#fit-arrow-muted)" marker-end="url(#fit-arrow-muted)"/>' +
+              '<line class="fit-svg-tick is-muted" x1="' + (heightX - 8) + '" y1="' + deskTop + '" x2="' + startX + '" y2="' + deskTop + '"/>' +
+              '<text class="fit-svg-dim-text is-muted" x="' + (heightX - 10) + '" y="' + (deskTop + (floorY - deskTop) / 2 - 4) + '" text-anchor="end">Desk</text>' +
+              '<text class="fit-svg-dim-text is-muted" x="' + (heightX - 10) + '" y="' + (deskTop + (floorY - deskTop) / 2 + 14) + '" text-anchor="end">' + DESK_HEIGHT + ' in tall</text>' +
+
+              // New desk: top, body, drawer pull, two legs
+              '<rect x="' + startX + '" y="' + deskTop + '" width="' + deskW + '" height="' + topH + '" rx="4"' + wood + '/>' +
+              '<rect x="' + (startX + 8) + '" y="' + (deskTop + topH) + '" width="' + Math.max(40, deskW - 16) + '" height="' + bodyH + '" rx="3"' + wood + '/>' +
+              '<rect class="desk-pull-' + handles + '" x="' + (startX + Math.round(deskW * 0.45)) + '" y="' + (deskTop + topH + 20) + '" width="22" height="6" rx="2"/>' +
+              '<rect x="' + (startX + 14) + '" y="' + legTop + '" width="14" height="' + legH + '" rx="2"' + wood + '/>' +
+              '<rect x="' + (deskEnd - 28) + '" y="' + legTop + '" width="14" height="' + legH + '" rx="2"' + wood + '/>' +
+
+              // The part of the desk past the right wall (only when too wide)
               (tooWide
-                ? '<rect class="fit-svg-over" x="' + roomEnd + '" y="100" width="' + (deskEnd - roomEnd) + '" height="122"/>'
+                ? '<rect class="fit-svg-over" x="' + roomEnd + '" y="' + deskTop + '" width="' + (deskEnd - roomEnd) + '" height="' + (floorY - deskTop) + '"/>'
                 : '') +
 
-              // Labels: desk width (above the desk) and style name
-              '<text class="fit-svg-strong" x="' + ((startX + deskEnd) / 2) + '" y="93" text-anchor="middle">' + desk + ' in</text>' +
-              '<text class="fit-svg-muted" x="' + startX + '" y="245">New desk: ' + deskName + '</text>' +
+              // Old desk: dashed outline, 40 x 29 in, standing on the same floor
+              '<rect class="fit-svg-old" x="' + startX + '" y="' + (floorY - OLD_DESK_HEIGHT * S) + '" width="' + (OLD_DESK_WIDTH * S) + '" height="' + (OLD_DESK_HEIGHT * S) + '"/>' +
+
+              // Labels under the floor
+              '<text class="fit-svg-strong" x="' + startX + '" y="' + (floorY + 24) + '">New desk: ' + deskName + ', ' + desk + ' in wide</text>' +
+              '<text class="fit-svg-muted" x="' + startX + '" y="' + (floorY + 44) + '">Dashed outline: your old desk, ' + OLD_DESK_WIDTH + ' in wide</text>' +
 
             '</svg>' +
           '</div>'
@@ -252,12 +291,12 @@
           // --- Size comparison drawing ---
           '<div class="card fit-scale-panel">' +
             '<h2>Size comparison</h2>' +
-            '<p class="fit-scale-note">All widths use the same scale.</p>' +
+            '<p class="fit-scale-note">Drawn to scale: widths and heights use the same scale.</p>' +
             createScaleDrawing(roomWidth, deskWidth) +
             '<div class="fit-legend">' +
               '<span><i class="fit-legend-new" style="background: var(--wood-' + finish + ')"></i> New desk</span>' +
               '<span><i class="fit-legend-old"></i> Old desk outline</span>' +
-              '<span><i class="fit-legend-limit"></i> Room limit</span>' +
+              '<span><i class="fit-legend-limit"></i> Walls of your space</span>' +
             '</div>' +
           '</div>' +
 

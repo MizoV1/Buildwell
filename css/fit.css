@@ -181,14 +181,21 @@
 .fit-scale-drawing svg { display: block; width: 100%; min-width: 34rem; height: auto; }
 
 /* Shapes and text inside the drawing */
-.fit-svg-person { fill: var(--text-muted); }
-.fit-svg-person-body { fill: none; stroke: var(--text-muted); stroke-width: 10; stroke-linecap: round; }
+.fit-svg-floor { stroke: var(--text-muted); stroke-width: 2; }
+.fit-svg-wall { fill: var(--border); }
+/* Measuring arrows: teal for the space, orange when the desk is too wide, grey for the desk height */
+.fit-svg-dim { stroke: var(--accent); stroke-width: 2; }
+.fit-svg-tick { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.fit-svg-arrowhead { fill: var(--accent); }
+.fit-svg-dim-text { fill: var(--accent); font-size: 14px; font-weight: 700; }
+.fit-svg-dim.is-warning, .fit-svg-tick.is-warning { stroke: var(--warning); }
+.fit-svg-arrowhead.is-warning, .fit-svg-dim-text.is-warning { fill: var(--warning); }
+.fit-svg-dim.is-muted, .fit-svg-tick.is-muted { stroke: var(--text-muted); }
+.fit-svg-arrowhead.is-muted, .fit-svg-dim-text.is-muted { fill: var(--text-muted); }
 .fit-svg-old { fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-dasharray: 7 5; }
-.fit-svg-limit { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 6 4; }
-.fit-svg-limit.is-warning { stroke: var(--warning); }
 .fit-svg-over { fill: var(--warning); opacity: 0.45; }   /* shades the part past the limit */
-.fit-svg-strong { fill: var(--text); font-size: 13px; font-weight: 700; }
-.fit-svg-muted { fill: var(--text-muted); font-size: 12px; }
+.fit-svg-strong { fill: var(--text); font-size: 14px; font-weight: 700; }
+.fit-svg-muted { fill: var(--text-muted); font-size: 13px; }
 
 /* Key under the drawing */
 .fit-legend {
@@ -205,7 +212,7 @@
 .fit-legend i { display: inline-block; width: 1rem; height: 0.625rem; border-radius: 2px; }
 .fit-legend-new { background: var(--wood-oak); }
 .fit-legend-old { border: 2px dashed var(--text-muted); }
-.fit-legend .fit-legend-limit { width: 3px; height: 1rem; background: var(--accent); }
+.fit-legend .fit-legend-limit { width: 0.375rem; height: 1rem; background: var(--border); }
 
 /* ===== 7. STEP 2: buttons and voice panel ============================== */
 
