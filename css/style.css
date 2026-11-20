@@ -1,13 +1,11 @@
 /* css/style.css  |  Owner: B  |  Storyboard frame 2
    Styles for the style picker only. Every class starts with "style-".
-   Sizes are in rem (so A+ text scaling works) and colours come from base.css variables.
-   Buttons (including Continue and the category chips) come from base.css. */
 
-/* ===== 1. Heading ====================================================== */
+/* = 1. Heading = */
 
 .style-heading p { color: var(--text-muted); }
 
-/* ===== 2. Category row ================================================= */
+/* = 2. Category row = */
 
 .style-categories { margin-bottom: var(--space-3); }
 
@@ -19,12 +17,12 @@
 
 .style-category-list { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 
-/* ===== 3. "Available desk styles" heading ============================== */
+/* = 3. "Available desk styles" heading = */
 
 .style-options-heading h2 { margin: 0 0 0.25rem; }
 .style-options-heading p { color: var(--text-muted); }
 
-/* ===== 4. Style cards ================================================== */
+/* = 4. Style cards = */
 
 /* Cards sit side by side, and stack when the screen is narrow or the text is large */
 .style-cards {
@@ -86,7 +84,7 @@
 .style-card-description { color: var(--text-muted); }
 .style-card-width { color: var(--accent); font-weight: 700; }
 
-/* ===== 5. Help box (its own class, so the shared guided hints still work) == */
+/* = 5. Help box (its own class, so the shared guided hints still work) = */
 
 .style-help {
   display: flex;
@@ -113,7 +111,7 @@
   font-weight: 700;
 }
 
-/* ===== 6. Selected message and Continue ================================ */
+/* = 6. Selected message and Continue = */
 
 .style-footer {
   display: flex;

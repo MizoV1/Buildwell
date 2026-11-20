@@ -8,13 +8,6 @@
 //                          and the desk's height.
 //   Step 2, too wide (Wireframe 4): an orange warning with Make it fit, Keep anyway
 //                          (asks to confirm first) and Re-measure.
-//
-// READS FROM STATE:   measuredWidth, roomWidth, roomConfirmed, deskWidth, style, finish, handles
-// SAVES TO STATE:     roomWidth, roomConfirmed, deskWidth, keepAnyway (keepAnyway with { undo: false })
-//
-// HOW THE TWO STEPS WORK
-//   roomConfirmed (true / false) decides which step is shown. It is saved with B.state.set,
-//   so pressing Undo after confirming takes the user straight back to Step 1.
 
 (function (B) {
   'use strict';
@@ -35,7 +28,7 @@
       // Toolbar: Back, Undo and A+ (shared, always first)
       B.ui.toolbar(container);
 
-      // ===== 1. Read saved information ========================================
+      // = Read saved information =
       const measuredWidth = Number(B.state.get('measuredWidth')) || 48;
       const roomWidth = Number(B.state.get('roomWidth')) || 48;
       const roomConfirmed = B.state.get('roomConfirmed') === true;
@@ -48,7 +41,7 @@
       const section = document.createElement('section');
       section.className = 'fit';
 
-      // ===== 2. Actions used by both steps ====================================
+      // = Actions used by both steps =
 
       // Save a confirmed room width and move to Step 2
       function confirmMeasurement(width) {
@@ -64,7 +57,7 @@
         B.router.refresh();
       }
 
-      // ===== 3. STEP 1: measure the space (Wireframe 2) =======================
+      // = measure the space (Wireframe 2) =
       function renderMeasurement() {
         section.innerHTML =
           // --- Heading and Guided hint ---
@@ -168,7 +161,7 @@
         ]);
       }
 
-      // ===== 4. Size comparison drawing (used in Step 2) ======================
+      // = Size comparison drawing =
       // A front view where widths and heights use the same SCALE, so the desks and
       // the space are true to size. Two measuring arrows show the width of the space
       // (horizontal) and the height of the desk (vertical). The new desk is drawn the

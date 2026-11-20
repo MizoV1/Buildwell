@@ -1,16 +1,24 @@
 /* css/home.css  |  Owner: A  |  Wireframe 1 */
+/* Defines the style for the homescreen only: language dropdown, title, the two large guide/standard buttons, my orders and help links.*/
 
+/* Pushes the language drop down to the top right*/
 .home-top { display: flex; justify-content: flex-end; margin-bottom: var(--space-2); }
 .home-lang { display: flex; align-items: center; gap: 0.5rem; }
 
+/* Deals with centering the heading and line under it*/
 .home-title { margin-top: var(--space-2); font-size: 2rem; text-align: center; }
 .home-subtitle { margin-bottom: var(--space-4); color: var(--text-muted); text-align: center; }
 
+/*This section is the two mode buttons*/
+
+/*puts the side by side unless there isn't room*/
 .home-modes {
   display: grid;
   gap: var(--space-3);
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
 }
+
+/* Defines each mode button*/
 .home-mode {
   display: flex;
   flex-direction: column;
@@ -27,10 +35,15 @@
   cursor: pointer;
 }
 .home-mode:hover { background: var(--accent-soft); }
+
+/*guided gets tinted*/
 .home-mode-guided { background: var(--accent-soft); }
+
+/*mode name and description*/
 .home-mode-name { font-size: 1.75rem; font-weight: 700; }
 .home-mode-desc { font-size: 1.125rem; color: var(--text-muted); }
 
+/*Centers the two smaller buttons for my order and help*/
 .home-links {
   display: flex;
   flex-wrap: wrap;

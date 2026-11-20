@@ -3,11 +3,11 @@
    Sizes are in rem (so A+ text scaling works) and colours come from base.css variables.
    Buttons, cards, banners, inputs and the two-column layout come from base.css. */
 
-/* ===== 1. Headings ===================================================== */
+/* = Headings = */
 
 .fit-intro { color: var(--text-muted); }
 
-/* ===== 2. STEP 1: simulated camera scan (left panel) =================== */
+/* = simulated camera scan (left panel) = */
 
 .fit-camera-top {
   display: flex;
@@ -100,7 +100,7 @@
   font-size: 0.875rem;
 }
 
-/* ===== 3. STEP 1: confirm or enter a measurement (right panel) ========= */
+/* = confirm or enter a measurement (right panel) = */
 
 .fit-measure-panel h2 { margin-top: 0; }
 .fit-measure-question { color: var(--text-muted); }
@@ -131,7 +131,7 @@
 .fit-error:empty { display: none; }
 .fit-error { margin-bottom: var(--space-1); }
 
-/* ===== 4. Help tip ===================================================== */
+/* = 4. Help tip = */
 
 .fit-help {
   display: flex;
@@ -160,7 +160,7 @@
   font-weight: 700;
 }
 
-/* ===== 5. STEP 2: result banner (shared .banner styles + an icon) ====== */
+/* = result banner (shared .banner styles + an icon) = */
 
 .fit-banner {
   display: flex;
@@ -172,7 +172,7 @@
 .fit-banner p { margin: 0; font-weight: 400; }
 .fit-icon-warning { background: var(--warning); }
 
-/* ===== 6. STEP 2: size comparison drawing ============================== */
+/* = size comparison drawing =*/
 
 .fit-scale-panel h2 { margin-top: 0; }
 .fit-scale-note { color: var(--text-muted); font-size: 0.875rem; }
@@ -214,7 +214,7 @@
 .fit-legend-old { border: 2px dashed var(--text-muted); }
 .fit-legend .fit-legend-limit { width: 0.375rem; height: 1rem; background: var(--border); }
 
-/* ===== 7. STEP 2: buttons and voice panel ============================== */
+/* = buttons and voice panel = */
 
 .fit-result-actions {
   display: flex;

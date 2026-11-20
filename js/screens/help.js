@@ -1,15 +1,7 @@
 // js/screens/help.js  |  Owner: A  |  Information hierarchy: Help  |  UR6
 //
-// WHAT TO BUILD
-//   [x] Accessibility settings: text size buttons (100%, 125%, 150%, 200%) and Guided / Standard
-//       (use B.ui.applyTextSize() and B.ui.applyMode() after saving, like home.js does)
-//   [x] Measuring your space: short steps for using a tape measure
-//   [x] Materials: plain-language notes on oak, walnut and maple
-//   [x] Contact support (demo phone and email)
-//   [x] Line saying nothing has a time limit and Undo / Back are on every screen
-//
-// READS FROM STATE:   textSize, mode
-// SAVES TO STATE:     textSize, mode (both with { undo: false })
+// This is the help and accessibility screen: It defines four cards for accessibility settings
+// Has text size, guided or standard mode, tips on measuring space, current wood finishes, and contact details.
 
 (function (B) {
   'use strict';

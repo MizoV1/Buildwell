@@ -2,16 +2,14 @@
 //
 // WHAT THIS SCREEN DOES
 //   Shows the furniture categories (only Desks is available) and three desk style cards.
-//   Picking a card saves the style, its starting width and its wood finish, then
+//   Picking a carits startid saves the style, ng width and its wood finish, then
 //   Continue moves on to the fit check.
-//
-// READS FROM STATE:   style
-// SAVES TO STATE:     style, deskWidth, finish, keepAnyway (keepAnyway with { undo: false })
+
 
 (function (B) {
   'use strict';
 
-  // ===== Desk styles ==========================================================
+  //= Desk styles =
   // Each style sets a starting width and wood finish. The Executive (52 in) is wider
   // than Maria's 48 in space, so choosing it shows the too-wide warning on the fit check.
   const DESKS = [
@@ -20,7 +18,7 @@
     { id: 'executive',     name: 'Executive',     description: 'A larger desk with extra workspace.',   width: 52, finish: 'maple' }
   ];
 
-  // ===== Desk drawing (matches the desk on the Customize screen) ==============
+  // = Desk drawing (matches the desk on the Customize screen) =
   // Same parts and proportions as Customize: a top, a body with a drawer pull,
   // and two legs. Same width scale too (30 to 72 in → 140 to 300 units), so a
   // 52 in desk looks the same width here as it does on Customize.
@@ -44,13 +42,12 @@
       // Toolbar: Back, Undo and A+ (shared, always first)
       B.ui.toolbar(container);
 
-      // ===== 1. Read the previously selected style, if there is one ===========
-      const savedStyle = B.state.get('style');
+      // = 1. Read the previously selected style, if there is one =
 
       const section = document.createElement('section');
       section.className = 'style';
 
-      // ===== 2. Page content ==================================================
+      // = 2. Page content =
       section.innerHTML =
         // --- Heading ---
         '<div class="style-heading">' +
@@ -60,7 +57,7 @@
         '<p class="guided-hint">Tap the picture of the desk you like best, then tap Continue. ' +
           'You can change its size, wood and handles later.</p>' +
 
-        // --- Category row (only Desks is available) ---
+        // = Category row (only Desks is available) =
         '<div class="style-categories">' +
           '<span class="style-category-label">Categories</span>' +
           '<div class="style-category-list">' +
@@ -72,7 +69,7 @@
           '</div>' +
         '</div>' +
 
-        // --- Style cards ---
+        // = Style cards =
         '<div class="style-options-heading">' +
           '<h2>Available desk styles</h2>' +
           '<p>Select a style to see its starting dimensions.</p>' +
@@ -96,8 +93,8 @@
           }).join('') +
         '</div>' +
 
-        // --- Help box (always visible; uses its own class so it doesn't change
-        //     the shared .guided-hint used on every other screen) ---
+        // = Help box (always visible; uses its own class so it doesn't change
+        //     the shared .guided-hint used on every other screen) =
         '<div class="style-help">' +
           '<span class="style-help-icon" aria-hidden="true">i</span>' +
           '<p><strong>Need help?</strong> Choose the desk that looks best to you. ' +
@@ -105,7 +102,7 @@
           'you check whether it fits in your room.</p>' +
         '</div>' +
 
-        // --- Selected message and Continue ---
+        // = Selected message and Continue =
         '<div class="style-footer">' +
           '<p class="style-selection-message">Please select a desk to continue.</p>' +
           '<button type="button" class="btn btn-primary style-continue" disabled>Continue</button>' +
@@ -120,7 +117,7 @@
       // Restore an existing selection when returning to this screen
       let selectedStyle = savedStyle || null;
 
-      // ===== 3. Show which card is selected and enable Continue ===============
+      // = 3. Show which card is selected and enable Continue =
       function updateSelection() {
         cards.forEach(function (card) {
           const isSelected = card.getAttribute('data-style') === selectedStyle;
@@ -136,7 +133,7 @@
           : 'Please select a desk to continue.';
       }
 
-      // ===== 4. Clicking a card: save the style, width and finish =============
+      // = 4. Clicking a card: save the style, width and finish =
       cards.forEach(function (card) {
         card.addEventListener('click', function () {
           selectedStyle = card.getAttribute('data-style');
@@ -152,7 +149,7 @@
         });
       });
 
-      // ===== 5. Continue to the fit check =====================================
+      // = 5. Continue to the fit check =
       continueButton.addEventListener('click', function () {
         if (selectedStyle) B.router.go('fit');
       });
