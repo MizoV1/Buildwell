@@ -28,6 +28,10 @@
   --wood-walnut: #6b4a33;
   --wood-maple: #e3c99a;
 
+  /* Handle finishes */
+  --metal-brushed: #b9bec5;
+  --metal-black: #1f2326;
+
   --radius: 0.5rem;
   --space-1: 0.5rem;
   --space-2: 1rem;
@@ -262,6 +266,10 @@ input[aria-invalid="true"] { border-color: var(--warning); }
 }
 .modal-message { font-size: 1.125rem; font-weight: 600; }
 .modal-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-1); }
+
+/* ---------- Desk drawings (shared by Style, Fit and Customize) ---------- */
+.desk-pull-brushed { fill: var(--metal-brushed); }
+.desk-pull-black { fill: var(--metal-black); }
 
 /* ---------- Placeholder boxes (temporary, while screens are built) ---------- */
 .placeholder-label {

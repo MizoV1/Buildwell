@@ -279,11 +279,21 @@
       });
 
       // Handle buttons
+      // Instead of redrawing the whole screen, recolour the existing drawer pull,
+      // so its colour fades smoothly from metal grey to black (see .customize-pull in customize.css).
       section.querySelectorAll('[data-handles]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           const chosen = btn.getAttribute('data-handles');
           B.state.set('handles', chosen);
-          B.router.refresh();
+
+          // Fade the pull to the new colour
+          section.querySelector('.customize-pull').setAttribute('class', 'customize-pull desk-pull-' + chosen);
+
+          // Update which handle button shows as selected
+          section.querySelectorAll('[data-handles]').forEach(function (other) {
+            other.setAttribute('aria-pressed', String(other.getAttribute('data-handles') === chosen));
+          });
+
           B.ui.toast('Handles: ' + (chosen === 'brushed' ? 'Brushed metal' : 'Black'));
         });
       });

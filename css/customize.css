@@ -40,6 +40,10 @@
   display: block;
 }
 
+/* Drawer pull fades between metal grey and black when the handles change */
+.customize-pull { transition: fill 0.4s ease; }
+@media (prefers-reduced-motion: reduce) { .customize-pull { transition: none; } }
+
 .customize-drag-handle {
   fill: var(--accent);
   stroke: var(--surface);
@@ -97,6 +101,7 @@
 .customize-choice-btn[aria-pressed="true"] {
   outline: 2px solid var(--accent);
   background: var(--accent-soft);
+  color: var(--text);
   font-weight: 600;
 }
 
