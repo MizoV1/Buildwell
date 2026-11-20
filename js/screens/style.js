@@ -1,23 +1,5 @@
-// js/screens/style.js  |  Owner: B  |  Storyboard frame 2  |  SR1
-//
-// WHAT TO BUILD
-//   [ ] Category row: Desks (selected) plus a few others shown as "coming soon"
-//   [ ] Picture cards for 2-3 desk styles (simple drawings or images, no jargon)
-//   [ ] Each style sets a starting desk width. Make one wider than 48 in (e.g. 52 in)
-//       so the fit check shows the too-wide warning in Maria's 48 in space.
-//   [ ] Show which style is selected; "Continue" only works once one is chosen
-//   [ ] Guided hint (class="guided-hint") explaining what to do
-//
-// READS FROM STATE:   style
-// SAVES TO STATE:     style, deskWidth   (also set keepAnyway to false with { undo: false })
-//
-// PATTERNS (see js/screens/home.js for a complete working screen):
-//   const style = B.state.get('style');                  // read a value
-//   B.state.set('style', 'classic');                     // save it (Undo can reverse it)
-//   B.state.set('deskWidth', 52);
-//   B.router.refresh();                                  // redraw this screen
-//   B.ui.toast('Classic selected');                      // feedback message (UR3)
-//   '<button class="btn btn-primary" data-go="fit">Continue</button>'   // go to next screen
+
+// js/screens/style.js | Owner: B | Storyboard frame 2 | SR1
 
 (function (B) {
   'use strict';
@@ -26,28 +8,173 @@
     render: function (container) {
       B.ui.toolbar(container);
 
-      // ---- Replace everything below with your real screen ----
-      B.ui.placeholder(container, {
-        title: 'Choose a desk style',
-        label: 'Storyboard frame 2 · Area B · SR1',
-        boxes: [
-          {
-            title: 'Category row',
-            ref: 'Storyboard frame 2',
-            items: ['Desks (selected)', 'Chairs, Shelves, Tables shown as "coming soon"']
-          },
-          {
-            title: 'Style picture cards',
-            ref: 'Storyboard frame 2: picture-based menu, no jargon',
-            items: ['2-3 styles, each with a picture, name and width', 'Tapping one selects it and saves style + deskWidth', 'One style wider than 48 in to trigger the warning']
-          },
-          {
-            title: 'Continue',
-            items: ['Shows the selected style', 'Continue to fit check (only after choosing)']
-          }
-        ],
-        next: { label: 'Continue to fit check', go: 'fit' }
+      // Read the previously selected style, if one exists.
+      const savedStyle = B.state.get('style');
+
+      const desks = [
+        {
+          id: 'classic-oak',
+          name: 'Classic Oak',
+          description: 'A simple, timeless wooden desk.',
+          width: 42,
+          appearance: 'oak'
+        },
+        {
+          id: 'modern-walnut',
+          name: 'Modern Walnut',
+          description: 'A clean, modern look for your office.',
+          width: 46,
+          appearance: 'walnut'
+        },
+        {
+          id: 'executive',
+          name: 'Executive',
+          description: 'A larger desk with extra workspace.',
+          width: 52,
+          appearance: 'executive'
+        }
+      ];
+
+      const section = document.createElement('section');
+      section.className = 'style-screen';
+
+      section.innerHTML =
+        '<div class="style-heading">' +
+          '<p class="style-step">STEP 1 OF 2</p>' +
+          '<h1>Choose your desk style</h1>' +
+          '<p>Start by choosing a desk that fits your needs and your space.</p>' +
+        '</div>' +
+
+        '<div class="style-categories">' +
+          '<span class="style-category-label">Categories</span>' +
+          '<div class="style-category-list">' +
+            '<button type="button" class="category-btn active">Desks</button>' +
+            '<button type="button" class="category-btn" disabled>Chairs · Coming soon</button>' +
+            '<button type="button" class="category-btn" disabled>Tables · Coming soon</button>' +
+            '<button type="button" class="category-btn" disabled>Shelves · Coming soon</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="style-options-heading">' +
+          '<h2>Available desk styles</h2>' +
+          '<p>Select a style to see its starting dimensions.</p>' +
+        '</div>' +
+
+        '<div class="style-cards">' +
+
+          desks.map(function (desk) {
+            const selected = savedStyle === desk.id;
+
+            return (
+              '<button type="button" class="style-card ' +
+                (selected ? 'selected' : '') +
+                '" data-style="' + desk.id + '" aria-pressed="' +
+                selected + '">' +
+
+                '<span class="style-check" aria-hidden="true">✓</span>' +
+
+                '<span class="desk-picture ' + desk.appearance + '">' +
+                  '<span class="desk-top"></span>' +
+                  '<span class="desk-leg left"></span>' +
+                  '<span class="desk-leg right"></span>' +
+                  '<span class="desk-support"></span>' +
+                '</span>' +
+
+                '<span class="style-card-info">' +
+                  '<span class="style-card-name">' + desk.name + '</span>' +
+                  '<span class="style-card-description">' +
+                    desk.description +
+                  '</span>' +
+                  '<span class="style-card-width">' +
+                    desk.width + ' inches wide' +
+                  '</span>' +
+                '</span>' +
+
+              '</button>'
+            );
+          }).join('') +
+
+        '</div>' +
+
+        '<div class="guided-hint">' +
+          '<span class="guided-hint-icon">i</span>' +
+          '<p><strong>Need help?</strong> Choose the desk that looks best to you. ' +
+          "You can customize its size and materials later. We'll also help " +
+          'you check whether it fits in your room.</p>' +
+        '</div>' +
+
+        '<div class="style-footer">' +
+          '<p class="style-selection-message">Please select a desk to continue.</p>' +
+          '<button type="button" class="btn btn-primary style-continue" disabled>' +
+            'Continue' +
+          '</button>' +
+        '</div>';
+
+      container.appendChild(section);
+
+      const cards = section.querySelectorAll('[data-style]');
+      const continueButton = section.querySelector('.style-continue');
+      const message = section.querySelector('.style-selection-message');
+
+      // Restore an existing selection when returning to this screen.
+      let selectedStyle = savedStyle || null;
+
+      function updateSelection() {
+        cards.forEach(function (card) {
+          const isSelected =
+            card.getAttribute('data-style') === selectedStyle;
+
+          card.classList.toggle('selected', isSelected);
+          card.setAttribute('aria-pressed', String(isSelected));
+        });
+
+        continueButton.disabled = !selectedStyle;
+
+        if (selectedStyle) {
+          const chosenDesk = desks.find(function (desk) {
+            return desk.id === selectedStyle;
+          });
+
+          message.textContent =
+            chosenDesk.name + ' selected · ' +
+            chosenDesk.width + ' inches wide';
+        } else {
+          message.textContent = 'Please select a desk to continue.';
+        }
+      }
+
+      // Handle clicking a desk card.
+      cards.forEach(function (card) {
+        card.addEventListener('click', function () {
+          selectedStyle = card.getAttribute('data-style');
+
+          const chosenDesk = desks.find(function (desk) {
+            return desk.id === selectedStyle;
+          });
+
+          // Save the selected style and its starting width.
+          B.state.set('style', chosenDesk.id);
+          B.state.set('deskWidth', chosenDesk.width);
+
+          // Reset the "keep anyway" choice for a new desk.
+          B.state.set('keepAnyway', false, { undo: false });
+
+          updateSelection();
+
+          B.ui.toast(chosenDesk.name + ' selected');
+        });
       });
+
+      // Continue to the room-fit screen.
+      continueButton.addEventListener('click', function () {
+        if (!selectedStyle) {
+          return;
+        }
+
+        B.router.go('fit');
+      });
+
+      updateSelection();
     },
 
     onEnter: function () {}
