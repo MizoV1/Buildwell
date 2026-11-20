@@ -1,544 +1,220 @@
 /* css/fit.css  |  Owner: B  |  Wireframes 2 and 4
-   Styles for this screen only. Start every class with "fit-" (for example .fit-panel).
-   Use the colour variables and rem sizes from base.css. */
+   Styles for the fit check screen only. Every class starts with "fit-".
+   Sizes are in rem (so A+ text scaling works) and colours come from base.css variables.
+   Buttons, cards, banners, inputs and the two-column layout come from base.css. */
 
-/* ========================================
-   BUILDWELL - ROOM FIT CHECK
-   ======================================== */
+/* ===== 1. Headings ===================================================== */
 
-.fit-screen {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 28px 24px 40px;
-  box-sizing: border-box;
-  color: #292b27;
-}
+.fit-intro { color: var(--text-muted); }
 
-/* Headings */
+/* ===== 2. STEP 1: simulated camera scan (left panel) =================== */
 
-.fit-heading {
-  margin-bottom: 28px;
-}
-
-.fit-step {
-  margin: 0 0 8px;
-  color: #71836b;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-}
-
-.fit-heading h1 {
-  margin: 0 0 10px;
-  font-size: 30px;
-}
-
-.fit-heading > p:last-child {
-  margin: 0;
-  color: #696d65;
-  line-height: 1.5;
-}
-
-/* Measurement layout */
-
-.fit-measure-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 24px;
-  align-items: stretch;
-}
-
-.camera-panel,
-.measurement-panel {
-  padding: 20px;
-  border: 1px solid #e0e3dc;
-  border-radius: 12px;
-  background: #fff;
-}
-
-.camera-top {
+.fit-camera-top {
   display: flex;
   align-items: center;
-  gap: 9px;
-  margin-bottom: 16px;
-  color: #657b5d;
-  font-size: 11px;
+  gap: 0.5rem;
+  margin-bottom: var(--space-2);
+  color: var(--accent);
+  font-size: 0.875rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.camera-dot {
-  width: 9px;
-  height: 9px;
+.fit-camera-dot {
+  width: 0.625rem;
+  height: 0.625rem;
   border-radius: 50%;
-  background: #83a477;
+  background: var(--accent);
 }
 
-/* Simulated camera view */
-
-.camera-view {
+/* The pretend camera view: a wall, a floor, a measuring line and corner guides */
+.fit-camera-view {
   position: relative;
-  height: 250px;
+  height: 15rem;
   overflow: hidden;
-  border: 2px solid #d9ded5;
-  border-radius: 8px;
-  background: linear-gradient(
-    145deg,
-    #e7e9df 0%,
-    #d5dbce 55%,
-    #c4cdbb 100%
-  );
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
 }
 
-.camera-wall {
-  position: absolute;
-  inset: 0 0 35px;
-  background:
-    linear-gradient(90deg, transparent 49%, rgba(255,255,255,.2) 50%, transparent 51%),
-    linear-gradient(#e7e9df, #d7ddcf);
-}
-
-.camera-floor {
+.fit-camera-floor {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 35px;
-  border-top: 2px solid #a9b39f;
-  background: #c3cbb9;
+  height: 2.25rem;
+  border-top: 2px solid var(--border);
+  background: var(--surface);
 }
 
-.camera-measure-line {
+.fit-camera-line {
   position: absolute;
   top: 52%;
   left: 12%;
   width: 76%;
   height: 2px;
-  background: #657b5d;
+  background: var(--accent);
 }
 
-.camera-measure-line::before,
-.camera-measure-line::after {
-  position: absolute;
-  top: -7px;
-  width: 2px;
-  height: 16px;
-  background: #657b5d;
+/* Small end marks on the measuring line */
+.fit-camera-line::before,
+.fit-camera-line::after {
   content: "";
-}
-
-.camera-measure-line::before {
-  left: 0;
-}
-
-.camera-measure-line::after {
-  right: 0;
-}
-
-.camera-measure-label {
   position: absolute;
-  top: calc(52% - 38px);
+  top: -0.4375rem;
+  width: 2px;
+  height: 1rem;
+  background: var(--accent);
+}
+.fit-camera-line::before { left: 0; }
+.fit-camera-line::after { right: 0; }
+
+.fit-camera-label {
+  position: absolute;
+  top: calc(52% - 2.5rem);
   left: 50%;
   transform: translateX(-50%);
-  padding: 7px 14px;
-  border-radius: 5px;
-  background: #657b5d;
-  color: white;
-  font-size: 16px;
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 1.125rem;
   font-weight: 700;
 }
 
-.camera-corner {
+/* Corner guides, like a camera viewfinder */
+.fit-camera-corner {
   position: absolute;
-  width: 24px;
-  height: 24px;
-  border-color: #657b5d;
-  border-style: solid;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0 solid var(--accent);
+}
+.fit-corner-tl { top: 0.75rem; left: 0.75rem; border-width: 2px 0 0 2px; }
+.fit-corner-tr { top: 0.75rem; right: 0.75rem; border-width: 2px 2px 0 0; }
+.fit-corner-bl { bottom: 0.75rem; left: 0.75rem; border-width: 0 0 2px 2px; }
+.fit-corner-br { bottom: 0.75rem; right: 0.75rem; border-width: 0 2px 2px 0; }
+
+.fit-camera-caption {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
 }
 
-.camera-corner.top-left {
-  top: 12px;
-  left: 12px;
-  border-width: 2px 0 0 2px;
-}
+/* ===== 3. STEP 1: confirm or enter a measurement (right panel) ========= */
 
-.camera-corner.top-right {
-  top: 12px;
-  right: 12px;
-  border-width: 2px 2px 0 0;
-}
+.fit-measure-panel h2 { margin-top: 0; }
+.fit-measure-question { color: var(--text-muted); }
 
-.camera-corner.bottom-left {
-  bottom: 12px;
-  left: 12px;
-  border-width: 0 0 2px 2px;
-}
-
-.camera-corner.bottom-right {
-  right: 12px;
-  bottom: 12px;
-  border-width: 0 2px 2px 0;
-}
-
-.camera-caption {
-  margin: 12px 0 0;
-  color: #777c73;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-/* Manual measurement */
-
-.measurement-panel h2 {
-  margin: 4px 0 5px;
-  font-size: 23px;
-}
-
-.measurement-question {
-  margin: 0 0 20px;
-  color: #696d65;
-}
-
-.fit-btn {
-  display: block;
-  width: 100%;
-  min-height: 46px;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 7px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
-}
-
-.fit-btn:focus-visible {
-  outline: 3px solid #9bb78e;
-  outline-offset: 3px;
-}
-
-.fit-btn-primary {
-  background: #657b5d;
-  color: white;
-}
-
-.fit-btn-primary:hover {
-  background: #506448;
-}
-
-.fit-btn-secondary {
-  border: 1px solid #657b5d;
-  background: white;
-  color: #506448;
-}
-
-.fit-btn-secondary:hover {
-  background: #f2f6ef;
-}
-
-.manual-divider {
+/* "Or enter it yourself" divider with a line on each side */
+.fit-divider {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 24px 0;
+  gap: 0.75rem;
+  margin: var(--space-3) 0 var(--space-2);
 }
-
-.manual-divider span {
-  flex: 1;
-  height: 1px;
-  background: #e0e3dc;
-}
-
-.manual-divider p {
+.fit-divider span { flex: 1; height: 1px; background: var(--border); }
+.fit-divider p {
   margin: 0;
-  color: #858a80;
-  font-size: 10px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
   font-weight: 700;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.fit-label {
-  display: block;
-  margin-bottom: 9px;
-  font-size: 13px;
-  font-weight: 700;
-}
+.fit-measure-panel label { display: block; margin-bottom: 0.5rem; }
 
-.measurement-input-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
+/* Number box and unit dropdown side by side */
+.fit-input-row { display: flex; gap: 0.5rem; margin-bottom: var(--space-1); }
+.fit-input-row input { flex: 1; min-width: 0; }
 
-.fit-input,
-.fit-select {
-  min-width: 0;
-  height: 44px;
-  padding: 0 10px;
-  border: 1px solid #cdd2c8;
-  border-radius: 6px;
-  background: white;
-  color: #292b27;
-  font-size: 14px;
-}
+.fit-error:empty { display: none; }
+.fit-error { margin-bottom: var(--space-1); }
 
-.fit-input {
-  flex: 1;
-}
-
-.fit-select {
-  width: 120px;
-}
-
-.fit-input:focus,
-.fit-select:focus {
-  outline: 2px solid #91a389;
-  border-color: #657b5d;
-}
-
-.measurement-error {
-  min-height: 18px;
-  margin: 0 0 8px;
-  color: #b34435;
-  font-size: 12px;
-}
-
-.measurement-error:empty {
-  display: none;
-}
-
-/* Help message */
+/* ===== 4. Help tip ===================================================== */
 
 .fit-help {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-top: 24px;
-  padding: 16px;
-  border: 1px solid #dce4d6;
-  border-radius: 10px;
-  background: #f5f8f2;
+  gap: 0.75rem;
+  margin-top: var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
 }
+.fit-help p { margin: 0; }
 
-.fit-help-icon {
+/* Round icons used in the help tip and the banners */
+.fit-help-icon,
+.fit-banner-icon {
   display: flex;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
   align-items: center;
   justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
-  background: #657b5d;
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
   font-weight: 700;
 }
 
-.fit-help p {
-  margin: 0;
-  color: #454941;
-  font-size: 14px;
-  line-height: 1.6;
-}
+/* ===== 5. STEP 2: result banner (shared .banner styles + an icon) ====== */
 
-/* Result banners */
-
-.fit-limit-banner,
-.fit-warning,
-.fit-success {
+.fit-banner {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 16px;
-  padding: 17px;
-  border-radius: 9px;
+  gap: 0.75rem;
+  margin-bottom: var(--space-2);
 }
+.fit-banner strong { display: block; margin-bottom: 0.25rem; }
+.fit-banner p { margin: 0; font-weight: 400; }
+.fit-icon-warning { background: var(--warning); }
 
-.fit-limit-banner {
-  border: 1px solid #dce4d6;
-  background: #f2f6ef;
-}
+/* ===== 6. STEP 2: size comparison drawing ============================== */
 
-.fit-warning {
-  border: 1px solid #edc18d;
-  background: #fff4e7;
-}
+.fit-scale-panel h2 { margin-top: 0; }
+.fit-scale-note { color: var(--text-muted); font-size: 0.875rem; }
 
-.fit-success {
-  display: block;
-  border: 1px solid #dce4d6;
-  background: #f2f6ef;
-}
+.fit-scale-drawing { width: 100%; overflow-x: auto; }
+.fit-scale-drawing svg { display: block; width: 100%; min-width: 34rem; height: auto; }
 
-.fit-banner-icon,
-.fit-warning-icon {
-  display: flex;
-  flex-shrink: 0;
-  width: 28px;
-  height: 28px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #657b5d;
-  color: white;
-  font-weight: 700;
-}
+/* Shapes and text inside the drawing */
+.fit-svg-person { fill: var(--text-muted); }
+.fit-svg-person-body { fill: none; stroke: var(--text-muted); stroke-width: 10; stroke-linecap: round; }
+.fit-svg-old { fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-dasharray: 7 5; }
+.fit-svg-limit { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 6 4; }
+.fit-svg-limit.is-warning { stroke: var(--warning); }
+.fit-svg-over { fill: var(--warning); opacity: 0.45; }   /* shades the part past the limit */
+.fit-svg-strong { fill: var(--text); font-size: 13px; font-weight: 700; }
+.fit-svg-muted { fill: var(--text-muted); font-size: 12px; }
 
-.fit-warning-icon {
-  background: #d9852d;
-}
-
-.fit-limit-banner strong,
-.fit-warning strong,
-.fit-success strong {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 15px;
-}
-
-.fit-limit-banner p,
-.fit-warning p,
-.fit-success p {
-  margin: 0;
-  color: #666b62;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* Scale comparison */
-
-.scale-panel {
-  margin-top: 22px;
-  padding: 20px;
-  overflow: hidden;
-  border: 1px solid #e0e3dc;
-  border-radius: 12px;
-  background: white;
-}
-
-.scale-panel-heading h2 {
-  margin: 0 0 5px;
-  font-size: 20px;
-}
-
-.scale-panel-heading p {
-  margin: 0;
-  color: #777c73;
-  font-size: 13px;
-}
-
-.scale-drawing {
-  width: 100%;
-  margin-top: 15px;
-  overflow-x: auto;
-}
-
-.scale-drawing svg {
-  display: block;
-  width: 100%;
-  min-width: 550px;
-  height: auto;
-}
-
-.scale-legend {
+/* Key under the drawing */
+.fit-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid #e9ebe6;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.875rem;
 }
+.fit-legend span { display: flex; align-items: center; gap: 0.5rem; }
+.fit-legend i { display: inline-block; width: 1rem; height: 0.625rem; border-radius: 2px; }
+.fit-legend-new { background: var(--wood-oak); }
+.fit-legend-old { border: 2px dashed var(--text-muted); }
+.fit-legend .fit-legend-limit { width: 3px; height: 1rem; background: var(--accent); }
 
-.scale-legend span {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #696d65;
-  font-size: 12px;
-}
-
-.scale-legend i {
-  display: inline-block;
-  width: 16px;
-  height: 10px;
-  border-radius: 2px;
-}
-
-.legend-new {
-  background: #a87546;
-}
-
-.legend-old {
-  border: 2px dashed #8b9187;
-}
-
-.legend-limit {
-  width: 3px !important;
-  height: 15px !important;
-  background: #657b5d;
-}
-
-/* Result buttons */
+/* ===== 7. STEP 2: buttons and voice panel ============================== */
 
 .fit-result-actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 450px;
-  margin: 24px auto 0;
+  gap: var(--space-1);
+  max-width: 28rem;
+  margin: var(--space-3) auto 0;
 }
 
-.fit-btn-text {
-  background: transparent;
-  color: #657b5d;
-  text-decoration: underline;
-}
-
-.fit-btn-text:hover {
-  background: #f2f6ef;
-}
-
-/* Voice area */
-
-.fit-voice-panel {
-  margin-top: 24px;
-}
-
-/* Responsive layout */
-
-@media (max-width: 750px) {
-  .fit-measure-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .fit-heading h1 {
-    font-size: 26px;
-  }
-}
-
-@media (max-width: 480px) {
-  .fit-screen {
-    padding: 20px 14px 30px;
-  }
-
-  .camera-panel,
-  .measurement-panel {
-    padding: 15px;
-  }
-
-  .measurement-input-row {
-    flex-wrap: wrap;
-  }
-
-  .fit-input {
-    width: 100%;
-    flex-basis: 100%;
-  }
-
-  .fit-select {
-    width: 100%;
-  }
-
-  .scale-panel {
-    padding: 12px;
-  }
-}
+.fit-voice-panel { margin-top: var(--space-2); }

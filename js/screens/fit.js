@@ -1,59 +1,53 @@
 // js/screens/fit.js  |  Owner: B  |  Wireframes 2 and 4  |  SR4, UR2, UR4
 //
-// WHAT TO BUILD
-//   Step 1: measure (Wireframe 2, right side)
-//   [ ] Simulated camera view (a styled box, no real camera) showing the measured width
-//   [ ] "We measured 48 in. Is that right?" with a big "Yes, that is right" button
-//   [ ] "Not right?" input: number + in/cm choice + "Use my measurement" (convert cm to in)
-//   [ ] Show an error message if the number is empty or unrealistic
+// WHAT THIS SCREEN DOES
+//   Step 1 (Wireframe 2): a simulated camera scan "measures" the space. The user confirms
+//                          it, or types their own measurement in inches or centimetres.
+//   Step 2 (Wireframe 2): a size comparison of the new desk, the old desk and a person,
+//                          with the room's width limit.
+//   Step 2, too wide (Wireframe 4): an orange warning with Make it fit, Keep anyway
+//                          (asks to confirm first) and Re-measure.
 //
-//   Step 2: result (Wireframe 2, left side)
-//   [ ] Banner: "Maximum width that fits: 48 in"
-//   [ ] True-scale drawing (SVG is easiest): new desk, dashed outline of the old desk (40 in),
-//       a person silhouette for scale, and the width limit
-//   [ ] "Re-measure my space" goes back to step 1
-//
-//   Step 2, too wide (Wireframe 4)
-//   [ ] Warning banner in orange: "Too wide: the maximum width that fits is 48 in"
-//   [ ] Show the part of the desk past the limit
-//   [ ] "Make it fit (48 in)"  -> deskWidth = roomWidth
-//   [ ] "Keep 52 in anyway"    -> ask first with B.ui.confirm(...), then keepAnyway = true
-//   [ ] "Re-measure my space"
-//
-//   [ ] Voice mock: B.ui.voice(panel, [{ label: 'Yes, that’s right', action: ... }, ...])
-//
-// READS FROM STATE:   measuredWidth, roomWidth, roomConfirmed, deskWidth
+// READS FROM STATE:   measuredWidth, roomWidth, roomConfirmed, deskWidth, style, finish, handles
 // SAVES TO STATE:     roomWidth, roomConfirmed, deskWidth, keepAnyway (keepAnyway with { undo: false })
 //
-// TIP: use roomConfirmed (true/false) to decide whether to show step 1 or step 2.
-//      Saving it with B.state.set means Undo takes the user back a step automatically.
-//
-// PATTERNS (see js/screens/home.js for a complete working screen):
-//   const room = B.state.get('roomWidth');
-//   B.state.set('roomConfirmed', true);
-//   B.router.refresh();
-//   B.ui.confirm('It will not fit. Keep it anyway?', function () { ... }, { yes: 'Keep it', no: 'Go back' });
-//   B.ui.toast('Space confirmed: ' + room + ' in');
-
+// HOW THE TWO STEPS WORK
+//   roomConfirmed (true / false) decides which step is shown. It is saved with B.state.set,
+//   so pressing Undo after confirming takes the user straight back to Step 1.
 
 (function (B) {
   'use strict';
 
+  // ===== Shared settings ======================================================
+
+  // Friendly names for the style chosen on the previous screen
+  const STYLE_NAMES = { 'classic-oak': 'Classic Oak', 'modern-walnut': 'Modern Walnut', executive: 'Executive' };
+
+  // Drawing scale: every width in the size comparison uses the same units per inch
+  const SCALE = 5;
+  const OLD_DESK_WIDTH = 40;   // the user's current desk, drawn as a dashed outline
+
   B.screens.fit = {
     render: function (container) {
+      // Toolbar: Back, Undo and A+ (shared, always first)
       B.ui.toolbar(container);
 
-      // Read saved information.
+      // ===== 1. Read saved information ========================================
       const measuredWidth = Number(B.state.get('measuredWidth')) || 48;
       const roomWidth = Number(B.state.get('roomWidth')) || 48;
       const roomConfirmed = B.state.get('roomConfirmed') === true;
-      const deskWidth = Number(B.state.get('deskWidth')) || 42;
-      const style = B.state.get('style') || 'your desk';
+      const deskWidth = Number(B.state.get('deskWidth')) || 44;
+      const deskName = STYLE_NAMES[B.state.get('style')] || 'Your desk';
+      const finish = B.state.get('finish') || 'oak';          // desk colour, same as Customize
+      const handles = B.state.get('handles') || 'brushed';    // drawer pull colour, same as Customize
 
+      // The section that holds the whole screen
       const section = document.createElement('section');
-      section.className = 'fit-screen';
+      section.className = 'fit';
 
-      // Save a confirmed room measurement.
+      // ===== 2. Actions used by both steps ====================================
+
+      // Save a confirmed room width and move to Step 2
       function confirmMeasurement(width) {
         B.state.set('roomWidth', width);
         B.state.set('roomConfirmed', true);
@@ -61,291 +55,228 @@
         B.router.refresh();
       }
 
-      // Return to the measurement step.
+      // Go back to Step 1 to measure again
       function remeasure() {
         B.state.set('roomConfirmed', false);
         B.router.refresh();
       }
 
-      // Build the room measurement screen.
+      // ===== 3. STEP 1: measure the space (Wireframe 2) =======================
       function renderMeasurement() {
         section.innerHTML =
-          '<div class="fit-heading">' +
-            '<p class="fit-step">STEP 2 OF 2</p>' +
-            '<h1>Let\'s check your space</h1>' +
-            '<p>We\'ll help make sure your new desk fits comfortably.</p>' +
-          '</div>' +
+          // --- Heading and Guided hint ---
+          '<h1>Let\'s check your space</h1>' +
+          '<p class="fit-intro">We\'ll help make sure your new desk fits comfortably.</p>' +
+          '<p class="guided-hint">Check the measurement below with a tape measure. ' +
+            'If it\'s right, tap Yes. If not, type your own number.</p>' +
 
-          '<div class="fit-measure-layout">' +
+          '<div class="two-col">' +
 
-            '<div class="camera-panel">' +
-              '<div class="camera-top">' +
-                '<span class="camera-dot"></span>' +
-                '<span>ROOM SCAN SIMULATION</span>' +
+            // --- Left: simulated camera scan (no real camera is used) ---
+            '<div class="card fit-camera-panel">' +
+              '<p class="fit-camera-top"><span class="fit-camera-dot"></span>Room scan (simulated)</p>' +
+              '<div class="fit-camera-view" aria-hidden="true">' +
+                '<div class="fit-camera-floor"></div>' +
+                '<div class="fit-camera-line"></div>' +
+                '<div class="fit-camera-label">' + measuredWidth + ' inches</div>' +
+                '<div class="fit-camera-corner fit-corner-tl"></div>' +
+                '<div class="fit-camera-corner fit-corner-tr"></div>' +
+                '<div class="fit-camera-corner fit-corner-bl"></div>' +
+                '<div class="fit-camera-corner fit-corner-br"></div>' +
               '</div>' +
-
-              '<div class="camera-view">' +
-                '<div class="camera-wall"></div>' +
-                '<div class="camera-floor"></div>' +
-                '<div class="camera-measure-line">' +
-                  '<span></span>' +
-                '</div>' +
-                '<div class="camera-measure-label">' +
-                  measuredWidth + ' inches' +
-                '</div>' +
-                '<div class="camera-corner top-left"></div>' +
-                '<div class="camera-corner top-right"></div>' +
-                '<div class="camera-corner bottom-left"></div>' +
-                '<div class="camera-corner bottom-right"></div>' +
-              '</div>' +
-
-              '<p class="camera-caption">This is a simulated camera scan. ' +
-              'No camera access is required.</p>' +
+              '<p class="fit-camera-caption">This is a simulated camera scan. No camera access is required.</p>' +
             '</div>' +
 
-            '<div class="measurement-panel">' +
+            // --- Right: confirm, or enter your own measurement ---
+            '<div class="card fit-measure-panel">' +
               '<h2>We measured ' + measuredWidth + ' in.</h2>' +
-              '<p class="measurement-question">Is that right?</p>' +
+              '<p class="fit-measure-question">Is that right?</p>' +
+              '<button type="button" class="btn btn-primary btn-block fit-confirm">Yes, that is right</button>' +
 
-              '<button type="button" class="fit-btn fit-btn-primary confirm-measurement">' +
-                'Yes, that is right' +
-              '</button>' +
+              '<div class="fit-divider"><span></span><p>Or enter it yourself</p><span></span></div>' +
 
-              '<div class="manual-divider">' +
-                '<span></span><p>OR ENTER IT YOURSELF</p><span></span>' +
-              '</div>' +
-
-              '<label class="fit-label" for="room-measurement">' +
-                'What is the width of your available space?' +
-              '</label>' +
-
-              '<div class="measurement-input-row">' +
-                '<input type="number" id="room-measurement" ' +
-                  'class="fit-input" min="1" step="any" placeholder="Enter width">' +
-                '<select id="measurement-unit" class="fit-select">' +
+              '<label for="fit-room-measurement">What is the width of your available space?</label>' +
+              '<div class="fit-input-row">' +
+                '<input type="number" id="fit-room-measurement" min="1" step="any" placeholder="Enter width">' +
+                '<select id="fit-measurement-unit" aria-label="Unit">' +
                   '<option value="in">Inches</option>' +
-                  '<option value="cm">Centimeters</option>' +
+                  '<option value="cm">Centimetres</option>' +
                 '</select>' +
               '</div>' +
-
-              '<p class="measurement-error" role="alert" aria-live="polite"></p>' +
-
-              '<button type="button" class="fit-btn fit-btn-secondary use-measurement">' +
-                'Use my measurement' +
-              '</button>' +
+              '<p class="field-error fit-error" role="alert"></p>' +
+              '<button type="button" class="btn btn-secondary btn-block fit-use-measurement">Use my measurement</button>' +
             '</div>' +
 
           '</div>' +
 
+          // --- Help tip under the two panels ---
           '<div class="fit-help">' +
-            '<span class="fit-help-icon">i</span>' +
-            '<p><strong>Not sure?</strong> Measure the open width of the area ' +
-            'where you want your desk. You can always change this measurement later.</p>' +
+            '<span class="fit-help-icon" aria-hidden="true">i</span>' +
+            '<p><strong>Not sure?</strong> Measure the open width of the area where you want your desk. ' +
+            'You can always change this measurement later.</p>' +
           '</div>' +
 
+          // --- Voice mock goes here ---
           '<div class="fit-voice-panel"></div>';
 
-        section.querySelector('.confirm-measurement')
-          .addEventListener('click', function () {
-            confirmMeasurement(measuredWidth);
-          });
+        // --- "Yes, that is right" ---
+        section.querySelector('.fit-confirm').addEventListener('click', function () {
+          confirmMeasurement(measuredWidth);
+        });
 
-        section.querySelector('.use-measurement')
-          .addEventListener('click', function () {
-            const input = section.querySelector('#room-measurement');
-            const unit = section.querySelector('#measurement-unit').value;
-            const error = section.querySelector('.measurement-error');
+        // --- "Use my measurement": check the number, convert cm to inches, save ---
+        section.querySelector('.fit-use-measurement').addEventListener('click', function () {
+          const input = section.querySelector('#fit-room-measurement');
+          const unit = section.querySelector('#fit-measurement-unit').value;
+          const error = section.querySelector('.fit-error');
+          const enteredValue = Number(input.value);
 
-            const enteredValue = Number(input.value);
+          function showError(message) {
+            error.textContent = message;
+            input.setAttribute('aria-invalid', 'true');
+            input.focus();
+          }
 
-            if (
-              input.value.trim() === '' ||
-              !Number.isFinite(enteredValue) ||
-              enteredValue <= 0
-            ) {
-              error.textContent = 'Please enter a valid measurement.';
-              input.focus();
-              return;
-            }
+          // Empty, not a number, or zero / negative
+          if (input.value.trim() === '' || !Number.isFinite(enteredValue) || enteredValue <= 0) {
+            showError('Please enter a valid measurement.');
+            return;
+          }
 
-            // Convert centimeters to inches when necessary.
-            const inches = unit === 'cm'
-              ? enteredValue / 2.54
-              : enteredValue;
+          // Convert centimetres to inches, then round to the nearest half inch
+          const inches = unit === 'cm' ? enteredValue / 2.54 : enteredValue;
+          const rounded = Math.round(inches * 2) / 2;
 
-            // Reject measurements outside a realistic room-width range.
-            if (inches < 12 || inches > 300) {
-              error.textContent =
-                'Please enter a room width between 12 and 300 inches.';
-              input.focus();
-              return;
-            }
+          // Reject widths outside a realistic room range
+          if (rounded < 12 || rounded > 300) {
+            showError('Please enter a room width between 12 and 300 inches.');
+            return;
+          }
 
-            error.textContent = '';
-            confirmMeasurement(Math.round(inches * 100) / 100);
-          });
+          error.textContent = '';
+          input.removeAttribute('aria-invalid');
+          confirmMeasurement(rounded);
+        });
 
-        // Voice command mockup.
-        const voicePanel = section.querySelector('.fit-voice-panel');
-
-        if (B.ui.voice) {
-          B.ui.voice(voicePanel, [
-            {
-              label: 'Yes, that’s right',
-              action: function () {
-                confirmMeasurement(measuredWidth);
-              }
-            },
-            {
-              label: 'Let me enter my measurement',
-              action: function () {
-                section.querySelector('#room-measurement').focus();
-              }
-            }
-          ]);
-        }
+        // --- Voice mock (simulated) ---
+        B.ui.voice(section.querySelector('.fit-voice-panel'), [
+          { label: 'Yes, that’s right', action: function () { confirmMeasurement(measuredWidth); } },
+          { label: 'Let me enter my measurement', action: function () { section.querySelector('#fit-room-measurement').focus(); } }
+        ]);
       }
 
-      // Draw a proportional desk comparison.
+      // ===== 4. Size comparison drawing (used in Step 2) ======================
+      // Every width uses the same SCALE. The new desk is drawn the same way as on
+      // the Customize screen: a top, a body with a drawer pull, and two legs,
+      // in the chosen wood finish and handle colour.
       function createScaleDrawing(room, desk) {
-        const scale = 5;
         const startX = 175;
-        const roomEnd = startX + room * scale;
-        const deskEnd = startX + desk * scale;
+        const roomEnd = startX + room * SCALE;
+        const deskW = desk * SCALE;
+        const deskEnd = startX + deskW;
         const canvasWidth = Math.max(650, deskEnd + 55, roomEnd + 55);
         const tooWide = desk > room;
-        const deskName = style.replace('-', ' ');
+        const wood = ' style="fill: var(--wood-' + finish + ')"';
 
         return (
-          '<div class="scale-drawing">' +
-            '<svg viewBox="0 0 ' + canvasWidth + ' 245" ' +
-              'role="img" aria-label="Scale comparison of your room, desk, old desk, and a person">' +
+          '<div class="fit-scale-drawing">' +
+            '<svg viewBox="0 0 ' + canvasWidth + ' 250" role="img" ' +
+              'aria-label="Size comparison: a ' + desk + ' inch desk, a ' + room + ' inch space, ' +
+              'your ' + OLD_DESK_WIDTH + ' inch old desk, and a person">' +
 
-              // Person silhouette.
-              '<circle cx="78" cy="49" r="13" fill="#4d5549"/>' +
-              '<path d="M78 64 L78 133 M78 80 L55 108 M78 80 L101 108 ' +
-                'M78 133 L60 190 M78 133 L96 190" ' +
-                'stroke="#4d5549" stroke-width="10" stroke-linecap="round" fill="none"/>' +
-              '<text x="78" y="215" text-anchor="middle" font-size="12" fill="#555">' +
-                'Person' +
-              '</text>' +
+              // Person silhouette (for a sense of size; not drawn to the same scale)
+              '<circle class="fit-svg-person" cx="78" cy="69" r="13"/>' +
+              '<path class="fit-svg-person-body" d="M78 84 L78 153 M78 100 L55 128 M78 100 L101 128 M78 153 L60 210 M78 153 L96 210"/>' +
+              '<text class="fit-svg-muted" x="78" y="235" text-anchor="middle">Person (not to scale)</text>' +
 
-              // Old desk: 40 inches wide.
-              '<rect x="' + startX + '" y="75" width="' + (40 * scale) + '" height="26" ' +
-                'fill="none" stroke="#8b9187" stroke-width="2" stroke-dasharray="7 5"/>' +
-              '<text x="' + (startX + 100) + '" y="68" text-anchor="middle" ' +
-                'font-size="12" fill="#747b70">Old desk · 40 in</text>' +
+              // Old desk: dashed outline, 40 inches wide
+              '<rect class="fit-svg-old" x="' + startX + '" y="50" width="' + (OLD_DESK_WIDTH * SCALE) + '" height="26"/>' +
+              '<text class="fit-svg-muted" x="' + (startX + OLD_DESK_WIDTH * SCALE / 2) + '" y="43" text-anchor="middle">Old desk · ' + OLD_DESK_WIDTH + ' in</text>' +
 
-              // Room width limit.
-              '<line x1="' + roomEnd + '" y1="42" x2="' + roomEnd + '" y2="202" ' +
-                'stroke="#657b5d" stroke-width="3" stroke-dasharray="6 4"/>' +
-              '<text x="' + roomEnd + '" y="28" text-anchor="middle" ' +
-                'font-size="13" font-weight="bold" fill="#506448">' +
-                'Room limit: ' + room + ' in</text>' +
+              // Room width limit: dashed line (orange when the desk is too wide)
+              '<line class="fit-svg-limit' + (tooWide ? ' is-warning' : '') + '" x1="' + roomEnd + '" y1="34" x2="' + roomEnd + '" y2="226"/>' +
+              '<text class="fit-svg-strong" x="' + roomEnd + '" y="24" text-anchor="middle">Room limit: ' + room + ' in</text>' +
 
-              // New desk tabletop.
-              '<rect x="' + startX + '" y="128" width="' + (desk * scale) + '" height="16" ' +
-                'rx="3" fill="#a87546"/>' +
+              // New desk, drawn like the Customize desk: top, body, drawer pull, two legs
+              '<rect x="' + startX + '" y="100" width="' + deskW + '" height="22" rx="4"' + wood + '/>' +                          // top
+              '<rect x="' + (startX + 8) + '" y="122" width="' + Math.max(40, deskW - 16) + '" height="50" rx="3"' + wood + '/>' + // body
+              '<rect class="desk-pull-' + handles + '" x="' + (startX + Math.round(deskW * 0.45)) + '" y="142" width="22" height="6" rx="2"/>' + // drawer pull
+              '<rect x="' + (startX + 14) + '" y="172" width="14" height="50" rx="2"' + wood + '/>' +                              // left leg
+              '<rect x="' + (deskEnd - 28) + '" y="172" width="14" height="50" rx="2"' + wood + '/>' +                             // right leg
 
-              // Highlight the part that extends past the room limit.
+              // The part of the desk past the limit (only when too wide)
               (tooWide
-                ? '<rect x="' + roomEnd + '" y="128" width="' +
-                  ((desk - room) * scale) + '" height="16" fill="#e58b36"/>'
+                ? '<rect class="fit-svg-over" x="' + roomEnd + '" y="100" width="' + (deskEnd - roomEnd) + '" height="122"/>'
                 : '') +
 
-              // Desk legs.
-              '<rect x="' + (startX + 12) + '" y="144" width="9" height="45" fill="#795334"/>' +
-              '<rect x="' + (deskEnd - 21) + '" y="144" width="9" height="45" fill="#795334"/>' +
-
-              // Width label.
-              '<text x="' + ((startX + deskEnd) / 2) + '" y="116" ' +
-                'text-anchor="middle" font-size="13" font-weight="bold" fill="#49372b">' +
-                desk + ' in' +
-              '</text>' +
-
-              '<text x="' + startX + '" y="235" font-size="11" fill="#777">' +
-                'New desk: ' + deskName +
-              '</text>' +
+              // Labels: desk width (above the desk) and style name
+              '<text class="fit-svg-strong" x="' + ((startX + deskEnd) / 2) + '" y="93" text-anchor="middle">' + desk + ' in</text>' +
+              '<text class="fit-svg-muted" x="' + startX + '" y="245">New desk: ' + deskName + '</text>' +
 
             '</svg>' +
           '</div>'
         );
       }
 
-      // Build the fit result screen.
+      // ===== 5. STEP 2: the result (Wireframe 2, or Wireframe 4 if too wide) ==
       function renderResult() {
         const tooWide = deskWidth > roomWidth;
 
         section.innerHTML =
-          '<div class="fit-heading">' +
-            '<p class="fit-step">ROOM FIT RESULTS</p>' +
-            '<h1>See how your desk fits</h1>' +
-            '<p>Here is a size comparison of your desk and available space.</p>' +
-          '</div>' +
+          // --- Heading and Guided hint ---
+          '<h1>See how your desk fits</h1>' +
+          '<p class="fit-intro">Here is a size comparison of your desk and your available space.</p>' +
+          '<p class="guided-hint">' +
+            (tooWide
+              ? 'The orange part of the desk will not fit. Tap "Make it fit" to shrink it to your space.'
+              : 'Your desk fits. Tap "Continue to customize" to choose the finish and handles.') +
+          '</p>' +
 
-          '<div class="fit-limit-banner">' +
-            '<span class="fit-banner-icon">✓</span>' +
-            '<div>' +
-              '<strong>Maximum width that fits: ' + roomWidth + ' in</strong>' +
-              '<p>Your available space has been confirmed.</p>' +
-            '</div>' +
-          '</div>' +
-
+          // --- ONE banner: orange if too wide (Wireframe 4), green if it fits ---
           (tooWide
-            ? '<div class="fit-warning">' +
-                '<span class="fit-warning-icon">!</span>' +
+            ? '<div class="banner banner-warning fit-banner">' +
+                '<span class="fit-banner-icon fit-icon-warning" aria-hidden="true">!</span>' +
                 '<div>' +
-                  '<strong>Too wide: the maximum width that fits is ' +
-                    roomWidth + ' in</strong>' +
-                  '<p>Your selected desk is ' + deskWidth + ' in wide, ' +
-                    (deskWidth - roomWidth) + ' in wider than your available space.</p>' +
+                  '<strong>Too wide: the maximum width that fits is ' + roomWidth + ' in</strong>' +
+                  '<p>Your selected desk is ' + deskWidth + ' in wide, ' + (deskWidth - roomWidth) + ' in wider than your available space.</p>' +
                 '</div>' +
               '</div>'
-            : '<div class="fit-success">' +
-                '<strong>Your desk fits!</strong>' +
-                '<p>Your selected desk is within the available room width.</p>' +
+            : '<div class="banner banner-ok fit-banner">' +
+                '<span class="fit-banner-icon" aria-hidden="true">✓</span>' +
+                '<div>' +
+                  '<strong>Your desk fits. Maximum width that fits: ' + roomWidth + ' in</strong>' +
+                  '<p>Your ' + deskWidth + ' in desk is within your available space.</p>' +
+                '</div>' +
               '</div>') +
 
-          '<div class="scale-panel">' +
-            '<div class="scale-panel-heading">' +
-              '<h2>Size comparison</h2>' +
-              '<p>All widths use the same scale.</p>' +
-            '</div>' +
+          // --- Size comparison drawing ---
+          '<div class="card fit-scale-panel">' +
+            '<h2>Size comparison</h2>' +
+            '<p class="fit-scale-note">All widths use the same scale.</p>' +
             createScaleDrawing(roomWidth, deskWidth) +
-            '<div class="scale-legend">' +
-              '<span><i class="legend-new"></i> New desk</span>' +
-              '<span><i class="legend-old"></i> Old desk outline</span>' +
-              '<span><i class="legend-limit"></i> Room limit</span>' +
+            '<div class="fit-legend">' +
+              '<span><i class="fit-legend-new" style="background: var(--wood-' + finish + ')"></i> New desk</span>' +
+              '<span><i class="fit-legend-old"></i> Old desk outline</span>' +
+              '<span><i class="fit-legend-limit"></i> Room limit</span>' +
             '</div>' +
           '</div>' +
 
+          // --- Buttons: Make it fit / Keep anyway (too wide) or Continue (fits) ---
           '<div class="fit-result-actions">' +
-
             (tooWide
-              ? '<button type="button" class="fit-btn fit-btn-primary make-fit">' +
-                  'Make it fit (' + roomWidth + ' in)' +
-                '</button>' +
-
-                '<button type="button" class="fit-btn fit-btn-secondary keep-anyway">' +
-                  'Keep ' + deskWidth + ' in anyway' +
-                '</button>'
-              : '<button type="button" class="fit-btn fit-btn-primary continue-customize">' +
-                  'Continue to customize' +
-                '</button>') +
-
-            '<button type="button" class="fit-btn fit-btn-text remeasure">' +
-              'Re-measure my space' +
-            '</button>' +
-
+              ? '<button type="button" class="btn btn-primary btn-block fit-make">Make it fit (' + roomWidth + ' in)</button>' +
+                '<button type="button" class="btn btn-secondary btn-block fit-keep">Keep ' + deskWidth + ' in anyway</button>'
+              : '<button type="button" class="btn btn-primary btn-block" data-go="customize">Continue to customize</button>') +
+            '<button type="button" class="btn btn-link fit-remeasure">Re-measure my space</button>' +
           '</div>' +
 
+          // --- Voice mock goes here ---
           '<div class="fit-voice-panel"></div>';
 
-        // Make the desk fit the room.
-        const makeFitButton = section.querySelector('.make-fit');
-
-        if (makeFitButton) {
-          makeFitButton.addEventListener('click', function () {
+        // --- "Make it fit": shrink the desk to the room width ---
+        const makeFit = section.querySelector('.fit-make');
+        if (makeFit) {
+          makeFit.addEventListener('click', function () {
             B.state.set('deskWidth', roomWidth);
             B.state.set('keepAnyway', false, { undo: false });
             B.ui.toast('Desk width adjusted to ' + roomWidth + ' in');
@@ -353,69 +284,45 @@
           });
         }
 
-        // Ask for confirmation before keeping an oversized desk.
-        const keepButton = section.querySelector('.keep-anyway');
-
-        if (keepButton) {
-          keepButton.addEventListener('click', function () {
+        // --- "Keep anyway": ask first, then remember the choice and move on ---
+        const keep = section.querySelector('.fit-keep');
+        if (keep) {
+          keep.addEventListener('click', function () {
             B.ui.confirm(
-              'This desk is wider than your available space. Are you sure you want to keep it?',
+              'This desk is ' + deskWidth + ' in, but your space is ' + roomWidth + ' in. It will not fit. Keep it anyway?',
               function () {
                 B.state.set('keepAnyway', true, { undo: false });
                 B.ui.toast('Desk kept at ' + deskWidth + ' in');
                 B.router.go('customize');
               },
-              {
-                yes: 'Keep it anyway',
-                no: 'Go back'
-              }
+              { yes: 'Keep it anyway', no: 'Go back' }
             );
           });
         }
 
-        // Continue when the desk fits.
-        const continueButton = section.querySelector('.continue-customize');
+        // --- "Re-measure my space" ---
+        section.querySelector('.fit-remeasure').addEventListener('click', remeasure);
 
-        if (continueButton) {
-          continueButton.addEventListener('click', function () {
-            B.router.go('customize');
-          });
-        }
-
-        section.querySelector('.remeasure')
-          .addEventListener('click', remeasure);
-
-        // Voice command mockup.
-        const voicePanel = section.querySelector('.fit-voice-panel');
-
-        if (B.ui.voice) {
-          B.ui.voice(voicePanel, [
-            {
-              label: 'Make it a little narrower',
-              action: function () {
-                const narrowerWidth = Math.max(12, deskWidth - 2);
-                B.state.set('deskWidth', narrowerWidth);
-                B.state.set('keepAnyway', false, { undo: false });
-                B.ui.toast('Desk narrowed to ' + narrowerWidth + ' in');
-                B.router.refresh();
-              }
-            },
-            {
-              label: 'Re-measure my space',
-              action: remeasure
+        // --- Voice mock (simulated) ---
+        B.ui.voice(section.querySelector('.fit-voice-panel'), [
+          {
+            label: 'Make it a little narrower',
+            action: function () {
+              const narrower = Math.max(12, deskWidth - 2);
+              B.state.set('deskWidth', narrower);
+              B.state.set('keepAnyway', false, { undo: false });
+              B.ui.toast('Desk narrowed to ' + narrower + ' in');
+              B.router.refresh();
             }
-          ]);
-        }
+          },
+          { label: 'Re-measure my space', action: remeasure }
+        ]);
       }
 
+      // ===== 6. Put the screen on the page, then show the right step ==========
       container.appendChild(section);
-
-      // Show measurement or result depending on confirmation.
-      if (!roomConfirmed) {
-        renderMeasurement();
-      } else {
-        renderResult();
-      }
+      if (roomConfirmed) renderResult();
+      else renderMeasurement();
     },
 
     onEnter: function () {}

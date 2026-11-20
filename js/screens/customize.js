@@ -79,7 +79,6 @@
       const svgDeskHeight = 72;
       const handleX = svgDeskX + svgDeskWidth;
       const handleY = svgDeskY + svgDeskHeight / 2;
-      const pullColor = handles === 'black' ? '#222222' : '#cbd5e1';
 
       const finishButtonsHtml = FINISHES.map(function (f) {
         const pressed = f.id === finish;
@@ -122,7 +121,7 @@
                 '<rect class="customize-leg customize-leg-left" x="' + (svgDeskX + 14) + '" y="' + (svgDeskY + svgDeskHeight) + '" width="14" height="50" rx="2" fill="' + finishColor(finish) + '" />' +
                 '<rect class="customize-leg customize-leg-right" x="' + (svgDeskX + svgDeskWidth - 28) + '" y="' + (svgDeskY + svgDeskHeight) + '" width="14" height="50" rx="2" fill="' + finishColor(finish) + '" />' +
                 // Drawer pull reflecting handle choice
-                '<rect class="customize-pull" x="' + (svgDeskX + Math.round(svgDeskWidth * 0.45)) + '" y="' + (svgDeskY + 42) + '" width="22" height="6" rx="2" fill="' + pullColor + '" />' +
+                '<rect class="customize-pull desk-pull-' + handles + '" x="' + (svgDeskX + Math.round(svgDeskWidth * 0.45)) + '" y="' + (svgDeskY + 42) + '" width="22" height="6" rx="2" />' +
                 // Draggable handle on right edge
                 '<circle class="customize-drag-handle" cx="' + handleX + '" cy="' + handleY + '" r="13" tabindex="0" role="slider" ' +
                   'aria-label="Drag to adjust desk width in inches" aria-valuemin="' + MIN_WIDTH + '" aria-valuemax="' + MAX_WIDTH + '" aria-valuenow="' + deskWidth + '" />' +
