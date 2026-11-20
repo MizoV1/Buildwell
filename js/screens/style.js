@@ -48,7 +48,7 @@
       const savedStyle = B.state.get('style');
 
       const section = document.createElement('section');
-      section.className = 'style-screen';
+      section.className = 'style';
 
       // ===== 2. Page content ==================================================
       section.innerHTML =
@@ -57,15 +57,18 @@
           '<h1>Choose your desk style</h1>' +
           '<p>Start by choosing a desk that fits your needs and your space.</p>' +
         '</div>' +
+        '<p class="guided-hint">Tap the picture of the desk you like best, then tap Continue. ' +
+          'You can change its size, wood and handles later.</p>' +
 
         // --- Category row (only Desks is available) ---
         '<div class="style-categories">' +
           '<span class="style-category-label">Categories</span>' +
           '<div class="style-category-list">' +
-            '<button type="button" class="category-btn active">Desks</button>' +
-            '<button type="button" class="category-btn" disabled>Chairs · Coming soon</button>' +
-            '<button type="button" class="category-btn" disabled>Tables · Coming soon</button>' +
-            '<button type="button" class="category-btn" disabled>Shelves · Coming soon</button>' +
+            // Shared chip buttons: Desks is selected, the others are greyed out
+            '<button type="button" class="btn btn-chip" aria-pressed="true">Desks</button>' +
+            '<button type="button" class="btn btn-chip" disabled>Chairs · Coming soon</button>' +
+            '<button type="button" class="btn btn-chip" disabled>Tables · Coming soon</button>' +
+            '<button type="button" class="btn btn-chip" disabled>Shelves · Coming soon</button>' +
           '</div>' +
         '</div>' +
 

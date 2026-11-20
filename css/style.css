@@ -1,295 +1,126 @@
 /* css/style.css  |  Owner: B  |  Storyboard frame 2
-   Styles for this screen only. Start every class with "style-" (for example .style-panel).
-   Use the colour variables and rem sizes from base.css. */
+   Styles for the style picker only. Every class starts with "style-".
+   Sizes are in rem (so A+ text scaling works) and colours come from base.css variables.
+   Buttons (including Continue and the category chips) come from base.css. */
 
-.style-screen {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 28px 24px 40px;
-  box-sizing: border-box;
-  color: #292b27;
-}
+/* ===== 1. Heading ====================================================== */
 
-/* Page heading */
+.style-heading p { color: var(--text-muted); }
 
-.style-heading {
-  margin-bottom: 28px;
-}
+/* ===== 2. Category row ================================================= */
 
-.style-heading h1 {
-  margin: 0 0 10px;
-  font-size: 32px;
-  line-height: 1.2;
-}
-
-.style-heading p:last-child {
-  margin: 0;
-  color: #696d65;
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-/* Category selection */
-
-.style-categories {
-  margin-bottom: 32px;
-}
+.style-categories { margin-bottom: var(--space-3); }
 
 .style-category-label {
   display: block;
-  margin-bottom: 12px;
-  font-size: 14px;
+  margin-bottom: var(--space-1);
   font-weight: 700;
 }
 
-.style-category-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+.style-category-list { display: flex; flex-wrap: wrap; gap: var(--space-1); }
 
-.category-btn {
-  padding: 10px 18px;
-  border: 1px solid #d8dcd4;
-  border-radius: 22px;
-  background: #fff;
-  color: #454941;
-  font-size: 14px;
-  cursor: pointer;
-}
+/* ===== 3. "Available desk styles" heading ============================== */
 
-.category-btn.active {
-  border-color: #657b5d;
-  background: #657b5d;
-  color: #fff;
-  font-weight: 700;
-}
+.style-options-heading h2 { margin: 0 0 0.25rem; }
+.style-options-heading p { color: var(--text-muted); }
 
-.category-btn:disabled {
-  color: #999d95;
-  background: #f2f3f0;
-  cursor: not-allowed;
-}
+/* ===== 4. Style cards ================================================== */
 
-/* Desk options */
-
-.style-options-heading {
-  margin-bottom: 18px;
-}
-
-.style-options-heading h2 {
-  margin: 0 0 6px;
-  font-size: 21px;
-}
-
-.style-options-heading p {
-  margin: 0;
-  color: #696d65;
-  font-size: 14px;
-}
-
+/* Cards sit side by side, and stack when the screen is narrow or the text is large */
 .style-cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
 }
-
-/* Individual desk cards */
 
 .style-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  border: 2px solid #e0e3dc;
-  border-radius: 12px;
-  background: #fff;
-  color: #292b27;
+  padding: var(--space-2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
 }
+.style-card:hover { border-color: var(--accent); }
 
-.style-card:hover {
-  border-color: #91a389;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
-}
-
+/* The selected card: thicker teal border and a tick in the corner */
 .style-card.selected {
-  border-color: #657b5d;
-  background: #f7f9f5;
-  box-shadow: 0 0 0 2px rgba(101, 123, 93, 0.12);
+  border: 3px solid var(--accent);
+  background: var(--accent-soft);
 }
-
-.style-card:focus-visible,
-.category-btn:focus-visible,
-.style-continue:focus-visible {
-  outline: 3px solid #9bb78e;
-  outline-offset: 3px;
-}
-
-/* Selected checkmark */
 
 .style-check {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 0.75rem;
+  right: 0.75rem;
   display: none;
-  width: 26px;
-  height: 26px;
   align-items: center;
   justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
-  background: #657b5d;
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
   font-weight: 700;
-  z-index: 2;
 }
-
-.style-card.selected .style-check {
-  display: flex;
-}
+.style-card.selected .style-check { display: flex; }
 
 /* Desk picture on each card (drawn in style.js to match the Customize desk) */
-
 .style-pic {
   display: block;
   width: 100%;
   height: auto;
-  margin-bottom: 1.125rem;
+  margin-bottom: var(--space-2);
   border-radius: var(--radius);
   background: var(--surface);
 }
 
-/* Card text */
+/* Name, description and width under the picture */
+.style-card-info { display: flex; flex-direction: column; gap: 0.375rem; }
+.style-card-name { font-size: 1.125rem; font-weight: 700; }
+.style-card-description { color: var(--text-muted); }
+.style-card-width { color: var(--accent); font-weight: 700; }
 
-.style-card-info {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.style-card-name {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.style-card-description {
-  min-height: 40px;
-  color: #696d65;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.style-card-width {
-  color: #657b5d;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-/* Help box (its own class, so the shared guided hints still work) */
+/* ===== 5. Help box (its own class, so the shared guided hints still work) == */
 
 .style-help {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-top: 28px;
-  padding: 16px;
-  border: 1px solid #dce4d6;
-  border-radius: 10px;
-  background: #f5f8f2;
+  gap: 0.75rem;
+  margin-top: var(--space-3);
+  padding: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
 }
+.style-help p { margin: 0; }
 
 .style-help-icon {
   display: flex;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
   align-items: center;
   justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
-  background: #657b5d;
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
   font-weight: 700;
 }
 
-.style-help p {
-  margin: 0;
-  color: #454941;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-/* Continue section */
+/* ===== 6. Selected message and Continue ================================ */
 
 .style-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-top: 28px;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
 }
-
-.style-selection-message {
-  margin: 0;
-  color: #696d65;
-  font-size: 14px;
-}
-
-.style-continue {
-  min-width: 140px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 7px;
-  background: #657b5d;
-  color: white;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.style-continue:hover:not(:disabled) {
-  background: #506448;
-}
-
-.style-continue:disabled {
-  background: #c8cec3;
-  color: #74796f;
-  cursor: not-allowed;
-}
-
-/* Smaller screens */
-
-@media (max-width: 700px) {
-  .style-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .style-heading h1 {
-    font-size: 26px;
-  }
-}
-
-@media (max-width: 480px) {
-  .style-screen {
-    padding: 20px 14px 30px;
-  }
-
-  .style-cards {
-    grid-template-columns: 1fr;
-  }
-
-  .desk-picture {
-    height: 130px;
-  }
-
-  .style-footer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .style-continue {
-    width: 100%;
-  }
-}
+.style-selection-message { margin: 0; color: var(--text-muted); }
