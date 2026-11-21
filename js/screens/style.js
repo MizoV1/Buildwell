@@ -43,7 +43,7 @@
       B.ui.toolbar(container);
 
       // = 1. Read the previously selected style, if there is one =
-
+      const savedStyle = B.state.get('style');
       const section = document.createElement('section');
       section.className = 'style';
 
